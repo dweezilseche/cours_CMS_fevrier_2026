@@ -6,15 +6,9 @@ export default class Preloader {
     this.listeners = {};
 
     this.fonts = {
-      Erode: [
+      'Franklin Gothic ATF': [
         { weight: 400, style: 'normal' },
-        { weight: 400, style: 'italic' },
         { weight: 500, style: 'normal' },
-        { weight: 500, style: 'italic' },
-      ],
-      Manrope: [
-        { weight: 400, style: 'normal' },
-        { weight: 700, style: 'normal' },
       ],
     };
 

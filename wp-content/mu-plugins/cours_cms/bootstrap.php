@@ -29,19 +29,11 @@
 
     add_action('after_setup_theme', function (): void {
         \Wkn\Wokine::init([
-            \App\Configuration::class,
             \App\Theme::class,
-            \App\Header::class,
-            \App\Footer::class,
-            \App\Reinssurance::class,
-            \App\Socials::class,
-            \App\Pagination::class,
             \App\ClassMapper::class,
             \App\Acf\AcfBlocks::class,
             \App\Acf\AcfContext::class,
             \App\Controllers\CharmsController::class,
-            \App\Controllers\CharmRequestController::class,
-            \App\Controllers\ClientController::class,
             \App\Controllers\FAQController::class,
         ]);
     }, 10);

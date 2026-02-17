@@ -4,11 +4,12 @@
     <meta charset="{{ site.charset }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.typekit.net/ffu4oiu.css">
     {{ function('wp_head') }}
 </head>
 <body class="{{ body_class }}" data-taxi>
     
-    {% include 'partials/header.twig' %}
+    {% include 'layouts/header.twig' %}
     
     <main data-taxi-view data-taxi-view-name="{{ post.post_name|default('default') }}">
         {% block content %}
@@ -16,7 +17,9 @@
         {% endblock %}
     </main>
     
-    {% include 'partials/footer.twig' %}
+    {% include 'layouts/footer.twig' %}
+
+    {% include 'components/svg-sprite.twig' %}
     
     {{ function('wp_footer') }}
 </body>

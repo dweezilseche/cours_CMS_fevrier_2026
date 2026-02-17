@@ -1,0 +1,37 @@
+{% set htmlTag = 'button' %}
+
+{% if link.url %}
+  {% set htmlTag = 'a' %}
+{% elseif link.fake %}
+  {% set htmlTag = 'div' %}
+{% endif %}
+
+<{{ htmlTag }} 
+  class="link{% if class %} {{ class }}{% endif %}{% if item.current %} --active{% endif %}" 
+  
+  {% if htmlTag == 'button' %}
+    type="button"
+  {% endif %}
+
+  {% if htmlTag == 'a' and link.url %}
+    href="{{ link.url }}" 
+    {% if router_disabled %}data-taxi-ignore{% endif %}
+    {% if anchor %}data-anchor data-taxi-ignore{% endif %}
+    {% if link.slug %}data-slug="{{ link.slug }}"{% endif %}
+    {% if link.target == 'blank' %}target="_blank" rel="noreferrer noopener"{% endif %}
+  {% endif %}
+>
+  {% if icon_before %}
+    <svg>
+      <use href="#{{ icon_before }}"></use>
+    </svg>
+  {% endif %}
+
+  <span>{{ link.title }}</span>
+
+  {% if icon_after %}
+    <svg>
+      <use href="#{{ icon_after }}"></use>
+    </svg>
+  {% endif %}
+</{{ htmlTag }}>

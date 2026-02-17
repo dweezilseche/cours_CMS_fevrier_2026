@@ -1,21 +1,38 @@
-{#
-  Composant : Bouton
+{% if htmlTag is not defined %}
+  {% set htmlTag = 'span' %}
   
-  Props:
-    - text (string) : Texte du bouton
-    - link (string) : URL du lien
-    - style (string) : primary|secondary|outline
-    - size (string) : small|medium|large
-    - icon (string) : Nom de l'icône (optionnel)
-#}
-
-{% set style = style|default('primary') %}
-{% set size = size|default('medium') %}
-{% set classes = 'button button--' ~ style ~ ' button--' ~ size %}
-
-<a href="{{ link }}" class="{{ classes }}">
-  {% if icon %}
-    <i class="button__icon icon-{{ icon }}"></i>
+  {% if button.url %}
+    {% set htmlTag = 'a' %}
+  {% elseif button.fake %}
+    {% set htmlTag = 'div' %}
   {% endif %}
-  <span class="button__text">{{ text }}</span>
-</a>
+{% endif %}
+
+<{{ htmlTag }}
+  class="button{% if class %} {{ class }}{% endif %}"
+  {% if id %}id="{{ id }}"{% endif %}
+  {% if button.url %}href="{{ button.url }}"{% endif %}
+  {% if button.type %} type="{{ button.type }}"{% endif %}
+  {% if button.name is defined and button.name %} name="{{ button.name }}"{% endif %}
+  {% if button.value is defined and button.value %} value="{{ button.value }}"{% endif %}
+  {% if button.disabled %} disabled{% endif %}
+  {# {% if button.target %}target="_blank" rel="noreferrer noopener"{% endif %} #}
+  {% if button.formId %} data-hubspot-form-id="{{ button.formId }}"{% endif %}
+  {% if ignore %}data-taxi-ignore{% endif %}
+  {% if download %}data-taxi-ignore download{% endif %}
+  {% if anchor %}data-anchor data-taxi-ignore{% endif %}
+>
+  {% if not noText %}
+    <span>{% if title %}{% if title_raw %}{{ title|raw }}{% else %}{{ title }}{% endif %}{% else %}{{ button.title }}{% endif %}</span>
+  {% endif %}
+  
+  {% if not noIcon %}
+    <div class="button__icon-wrapper">
+    {% for i in 1..2 %}
+        <svg class="button__icon{% if icon_alt is defined and icon_alt and i == 2 %} button__icon--alt{% endif %}">
+          <use href="#{{ i == 2 and icon_alt is defined and icon_alt ? icon_alt : icon }}"></use>
+        </svg>
+    {% endfor %}
+    </div>
+  {% endif %}
+</{{ htmlTag }}>

@@ -58,11 +58,6 @@ export default class Taxi {
         params: container => [container, { lenis }],
       },
       // Partials
-
-      mediasSlider: {
-        class: MediasSlider,
-        params: container => [container, { lenis }],
-      },
     };
 
     this.setupEventListeners();

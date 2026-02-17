@@ -3,83 +3,23 @@
 %link {
   position: relative;
   display: inline-block;
-  color: black;
+  color: inherit;
+  font: 500 1.2rem / 1.4 $FranklinGothic;
 
-  &.is-white {
-    color: white;
-  }
-
-  &:not(.sl) {
-
-    &:focus,
-    &:hover {
-      &>span {
-        background-size: 0% 0.2rem;
-        background-position: 100% 100%;
-      }
-    }
-
+  &:hover {
     &>span {
-      display: inline;
-      line-height: 1.4;
-      background-image: linear-gradient(currentColor, currentColor);
+      background-size: 100% 0.1rem;
       background-position: 0% 100%;
-      background-repeat: no-repeat;
-      background-size: 100% 0.2rem;
-      transition: background-size 750ms $ease-natural;
     }
   }
 
-  &:not(.is-basic) {
-    font: 700 2.2rem / 1.5 $Erode;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-
-  &.is-basic {
-    font: 400 1.4rem / 1.5 $Manrope;
-
-    &.sl {
-
-      &:focus,
-      &:hover {
-        &>span {
-          background-size: 100% 0.1rem;
-          background-position: 0% 100%;
-        }
-      }
-
-      &>span {
-        display: inline;
-        line-height: 1.4;
-        background-image: linear-gradient(currentColor, currentColor);
-        background-position: 100% 100%;
-        background-repeat: no-repeat;
-        background-size: 0% 0.1rem;
-        transition: background-size 750ms $ease-natural;
-      }
-    }
-  }
-
-  // Single line
-  &.sl {
-
-    &:focus,
-    &:hover {
-      &>span {
-        background-size: 100% 0.2rem;
-        background-position: 0% 100%;
-      }
-    }
-
-    &>span {
-      display: inline;
-      line-height: 1.4;
-      background-image: linear-gradient(currentColor, currentColor);
-      background-position: 100% 100%;
-      background-repeat: no-repeat;
-      background-size: 0% 0.2rem;
-      transition: background-size 750ms $ease-natural;
-    }
+  &>span {
+    display: inline;
+    line-height: 1.4;
+    background-image: linear-gradient($white, $white);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    background-size: 0% 0.1rem;
+    transition: background-size 600ms $ease;
   }
 }

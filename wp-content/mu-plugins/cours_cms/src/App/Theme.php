@@ -20,7 +20,11 @@ class Theme extends WknTheme
             $environment = WP_ENV;
         }
         $isProduction = ($environment === 'production' && (!defined('WP_DEBUG') || !WP_DEBUG));
-        Timber::$cache = $isProduction;
+        
+        // Désactiver le cache Twig (forcer à false)
+        Timber::$cache = false;
+        Timber::$twig_cache = false;
+        
         Timber::$autoescape = false;
 
         add_theme_support('title-tag');
@@ -60,6 +64,10 @@ class Theme extends WknTheme
         add_image_size('thumbnail-large', 400, 400, true);
         add_image_size('gallery', 800, 600, true);
 
+        // Activer les inscriptions utilisateurs
+        update_option('users_can_register', 1);
+        update_option('default_role', 'customer'); // Rôle par défaut : client WooCommerce
+        
         add_action('wp_dashboard_setup', [self::class, 'wpDashboardSetup']);
         add_action('wp_before_admin_bar_render', [self::class, 'wpBeforeAdminBarRender']);
         add_action('admin_menu', [self::class, 'adminRemoveMenus']);
@@ -73,8 +81,6 @@ class Theme extends WknTheme
         add_filter('allowed_block_types_all', [self::class, 'allowed_block_types_all'], 10, 2);
         add_filter('upload_mimes', [self::class, 'allow_webp_upload']);
         add_filter('file_is_displayable_image', [self::class, 'webp_is_displayable_image'], 10, 2);
-
-        Pagination::init();
     }
 
     /**

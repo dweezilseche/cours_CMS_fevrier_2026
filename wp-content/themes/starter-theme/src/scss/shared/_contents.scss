@@ -13,23 +13,23 @@
   }
 
   h2 {
-    font: 500 2.5rem / 1.4 $Erode;
+    font: 500 2.5rem / 1.4 $FranklinGothic;
   }
 
   h3 {
-    font: 500 2.25rem / 1.4 $Erode;
+    font: 500 2.25rem / 1.4 $FranklinGothic;
   }
 
   h4 {
-    font: 500 calc(2.5rem * 0.8) / 1.4 $Erode;
+    font: 500 calc(2.5rem * 0.8) / 1.4 $FranklinGothic;
   }
 
   h5 {
-    font: 500 calc(2.5rem * 0.7) / 1.4 $Erode;
+    font: 500 calc(2.5rem * 0.7) / 1.4 $FranklinGothic;
   }
 
   h6 {
-    font: 500 calc(2.5rem * 0.6) / 1.4 $Erode;
+    font: 500 calc(2.5rem * 0.6) / 1.4 $FranklinGothic;
   }
 
   // ul,
@@ -84,5 +84,5 @@
 %chapo {
   @extend %content-basic;
 
-  font: 400 2.7rem / 1.5 $Manrope;
+  font: 400 2.7rem / 1.5 $FranklinGothic;
 }

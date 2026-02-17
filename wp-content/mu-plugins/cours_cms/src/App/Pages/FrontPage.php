@@ -3,36 +3,21 @@
 namespace App\Pages;
 
 use Timber\Timber;
-use Timber\Post;
 
 defined('ABSPATH') || exit;
 
-class FrontPage extends Post
+class FrontPage extends Page
 {
     /**
-     * @return \Timber\Post[]
+     * Charge automatiquement les champs ACF pour la page d'accueil
      */
-    public function getLatestProducts(): array
+    public function __construct($pid = null)
     {
-        $posts = Timber::get_posts([
-            'post_type'      => 'product',
-            'post_status'    => 'publish',
-            'posts_per_page' => 6,
-            'orderby'        => 'date',
-            'order'          => 'DESC',
-            'meta_query'     => [
-                ['key' => '_stock_status', 'value' => 'instock', 'compare' => '='],
-            ],
-            'tax_query'      => [
-                [
-                    'taxonomy' => 'product_visibility',
-                    'field'    => 'name',
-                    'terms'    => ['exclude-from-catalog'],
-                    'operator' => 'NOT IN',
-                ],
-            ],
-        ]);
-
-        return $posts instanceof \Traversable ? iterator_to_array($posts, false) : (array) $posts;
+        parent::__construct($pid);
+        
+        // Charger les champs ACF personnalisés
+        if (function_exists('get_field')) {
+            $this->hero = get_field('hero', $this->ID) ?: false;
+        }
     }
 }

@@ -6,7 +6,8 @@
     
     <div class="home">
         <div class="container">
-            <h1>Bienvenue sur le starter theme WordPress + WooCommerce</h1>
+        {{ dump(post) }}
+            {% include 'partials/hero.twig' with { fields: post.hero } %}
         </div>
     </div>
     

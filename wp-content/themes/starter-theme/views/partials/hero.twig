@@ -1,0 +1,17 @@
+{% set img = fields.img %}
+
+<div class="hero">
+  <div class="hero__container">
+    <h1 class="hero__title">{{ fields.title|default('Tournoi de Formule Dé') }}</h1>
+
+    {{ dump(fields) }}
+
+    {% if img %}
+      {% include 'components/picture.twig' with {
+        class: '__img',
+        lazyload: true,
+        picture: img
+     } only %}
+    {% endif %}
+  </div>
+</div>

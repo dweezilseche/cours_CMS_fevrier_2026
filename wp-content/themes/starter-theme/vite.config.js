@@ -50,8 +50,21 @@ export default defineConfig({
           if (assetInfo.name.endsWith('.css')) {
             return 'css/[name].[hash].css';
           }
+          // Fonts et autres assets restent dans fonts/
+          if (assetInfo.name.match(/\.(woff|woff2|eot|ttf|otf)$/)) {
+            return 'fonts/[name].[hash][extname]';
+          }
           return 'assets/[name].[hash][extname]';
         },
+      },
+    },
+    // Customize how URLs are generated - use relative paths in production
+    experimental: {
+      renderBuiltUrl(filename, { hostType }) {
+        if (hostType === 'css' && filename.includes('/fonts/')) {
+          // In CSS, use relative paths for fonts
+          return { relative: true };
+        }
       },
     },
   },

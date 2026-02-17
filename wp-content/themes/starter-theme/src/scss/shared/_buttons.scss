@@ -1,24 +1,29 @@
 @use '../utils/variables' as *;
+@use '../utils/responsive' as *;
 
 $buttons-themes: // Slug        // Background     // Color
 
-  'black' black white,
+  'white' rgba(0, 0, 0, 0.20) $white,
+  'black' rgba(0, 0, 0, 0) $black,
+  'beige'$beige $black,
+  'full-black'$black $white,
 
 ;
 
 %button {
-  padding: 1.6rem 2.4rem;
-  border-radius: 0.5rem;
+  border-radius: 0.4rem;
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
-  text-transform: uppercase;
   transition: transform 500ms $ease;
-  color: black;
+  color: $white;
+  border: 0.1rem solid rgba($white, 0.3);
+  font: 500 1.4rem / 1 $FranklinGothic;
+  // background: rgba(0, 0, 0, 0.20);
+  backdrop-filter: blur(5px);
 
-  svg {
-    width: 2rem;
-    height: 2rem;
+  @include media('>=tablet') {
+    font: 500 1.2rem / 1 $FranklinGothic;
   }
 
   &:focus,
@@ -26,9 +31,87 @@ $buttons-themes: // Slug        // Background     // Color
     transform: scale(0.95);
   }
 
-  &.is-min {
-    font-size: 1.2rem;
+  &.is-normal {
+    padding: 1.6rem 1.6rem;
+  }
+
+  &.is-cart {
     padding: 1.2rem 1.6rem;
+    border: none;
+    background: none;
+  }
+
+  &.is-active {
+    background: $beige !important;
+    color: $black !important;
+    border: none;
+  }
+
+  &.is-small {
+    padding: 1.2rem 1.2rem;
+    font: 500 1.2rem / 1 $FranklinGothic;
+  }
+
+  &.is-full-black {
+    border: none;
+  }
+
+  &.is-just-arrow {
+    width: 4rem;
+    height: 4rem;
+    border: 0.1rem solid $black;
+    border-radius: 50%;
+    color: $black;
+    background: none;
+    transition: background 500ms $ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      backdrop-filter: blur(5px);
+    }
+
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+
+  span {
+    display: inline-block;
+  }
+
+  .button__icon-wrapper {
+    position: relative;
+    width: 1.4rem;
+    height: 1.4rem;
+    overflow: hidden;
+  }
+
+  .button__icon {
+    width: 1.4rem;
+    height: 1.4rem;
+    position: absolute;
+    transition: transform 850ms $ease-out-quart;
+
+    &:nth-child(1) {
+      transform: translateX(-100%) scale(0);
+    }
+
+    &:nth-child(2) {
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  &:hover .button__icon {
+    &:nth-child(1) {
+      transform: translateX(0) scale(1);
+    }
+
+    &:nth-child(2) {
+      transform: translateX(100%) scale(0);
+    }
   }
 
   /*
@@ -39,6 +122,7 @@ $buttons-themes: // Slug        // Background     // Color
     &.is-#{$slug} {
       background-color: $background;
       color: $color;
+      border-color: rgba($color, 0.3);
     }
   }
 }

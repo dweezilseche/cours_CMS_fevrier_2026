@@ -1,0 +1,23 @@
+{# Set the picture original sizes #}
+{% set original_width = picture.width %}
+{% set original_height = picture.height %}
+
+{# Define the picture source (thumbnail pictures have "src"/ ACF images have "url") #}
+{% set picture_source = picture.src ?? picture.url %}
+
+{# Define the lightweight sizes #}
+{% set ratio = ratio|default(1.0) %}
+{% set new_width = original_width * ratio %}
+{% set new_height = original_height * ratio %}
+
+{# Define the WebP source #}
+{% set webp = picture_source|resize(new_width, new_height)|towebp %}
+
+<picture 
+  {% if lazyload %}data-lazy{% endif %} 
+  style="--width: {{ original_width }}; --height: {{ original_height }};"
+  class="{{ class }}"
+>
+  <source {% if lazyload %}data-{% endif %}srcset="{{ webp }}" type="image/webp" />
+  <img {% if lazyload %}data-{% endif %}src="{{ picture_source }}" alt="{{ picture.alt }}" title="{{ picture.alt }}" draggable="false" />
+</picture>
