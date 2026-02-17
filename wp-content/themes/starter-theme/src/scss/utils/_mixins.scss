@@ -1,0 +1,39 @@
+@use 'sass:math';
+
+// ------------------------------------ // ------------------------------------------
+// ------------------------------- M I X I N S --------------------------------------
+// ------------------------------------ // ------------------------------------------
+
+// Declare font family in one line
+// Polices à placer dans static/fonts/ pour que Vite les résolve au build
+@mixin font-face($name, $font-family, $weight: 400) {
+  @font-face {
+    font-family: $name;
+    font-weight: $weight;
+    font-style: normal;
+    font-display: swap;
+    src:
+      url('../../../static/fonts/#{$font-family}.woff2') format('woff2'),
+      url('../../../static/fonts/#{$font-family}.woff') format('woff');
+  }
+}
+
+// Declare aspect ratio with supports
+@mixin aspect-ratio($width, $height) {
+  aspect-ratio: #{$width} / #{$height};
+
+  @supports not (aspect-ratio: 1 / 1) {
+    padding-top: calc(100% * #{$height} / #{$width});
+    position: relative;
+
+    > * {
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  > * {
+    height: 100%;
+    width: 100%;
+  }
+}

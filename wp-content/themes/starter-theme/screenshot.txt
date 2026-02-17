@@ -1,0 +1,1 @@
+screenshot.png should be 1200x900px and represent the theme

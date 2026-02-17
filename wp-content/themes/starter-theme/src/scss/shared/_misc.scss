@@ -1,0 +1,60 @@
+@use '../utils/responsive' as *;
+
+%cover-fixed {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+%cover-absolute {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+%column-start {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+%center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+%baseline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+
+%text-truncate {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+
+%pseudo-element {
+  content: '';
+  display: block;
+}
+
+%clip-path {
+  clip-path: inset(10px 10px 10px 10px round 10px 10px 10px 10px);
+}
+
+%hd-max-width {
+  @include media('>=hd') {
+    width: 100%;
+    max-width: 150rem;
+    margin: 0 auto;
+  }
+}

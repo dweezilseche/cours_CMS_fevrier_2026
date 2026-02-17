@@ -1,0 +1,78 @@
+@use '../utils/variables' as *;
+@use '../utils/mixins' as *;
+@use '../utils/responsive' as *;
+@use '../shared/misc' as *;
+
+#header {
+  @extend %center;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem;
+  z-index: z('header');
+
+}
+
+.header__container {
+  @extend %center;
+  width: 100%;
+  z-index: 1;
+
+  padding: 1.7rem;
+  color: $white;
+  box-shadow: 0px 30px 64px rgba(0, 0, 0, 0.19);
+
+  @include media('<tablet') {
+    background-color: rgba($black, 0.9);
+    justify-content: space-between;
+  }
+
+  @include media('>=tablet') {
+    position: relative;
+    background-color: rgba($black, 0.6);
+    backdrop-filter: blur(65px);
+  }
+}
+
+.header__button-container {
+  right: 0;
+  transform-origin: top right;
+  transition: transform 850ms $ease-out-expo;
+  width: 100%;
+
+  @include media('<tablet') {
+    position: fixed;
+    bottom: 0;
+
+    display: none;
+  }
+
+  @include media('>=tablet') {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+  }
+
+  .header.has-scroll & {
+    @include media('>=tablet') {
+      transform: translate(0, -50%) scale(0.75);
+    }
+  }
+}
+
+.header__logo {
+  color: inherit;
+  position: relative;
+  z-index: 2;
+
+  @include media('>=tablet') {
+    display: none;
+  }
+
+  svg {
+    width: 15.284rem;
+    height: 4.5rem;
+  }
+}

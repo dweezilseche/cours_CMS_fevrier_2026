@@ -1,0 +1,43 @@
+@use '../utils/variables' as *;
+@use '../utils/mixins' as *;
+@use '../utils/responsive' as *;
+@use '../shared/misc' as *;
+
+.menu {
+  color: $black;
+  will-change: opacity, transform;
+
+  @include media('<=tablet') {
+    padding: calc(var(--vh, 1vh) * 30) var(--gutter);
+    position: fixed;
+    inset: 0;
+    transform: translate(0%, -100%);
+    background-color: $black;
+    color: $white;
+  }
+
+  ul {
+    @extend %center;
+    gap: 2rem;
+
+    @include media('<=tablet') {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    @include media('>tablet') {
+      gap: 5rem;
+    }
+
+    li {
+      a {
+        display: inline-block;
+        color: inherit;
+
+        @include media('<=tablet') {
+          font-size: 4rem;
+        }
+      }
+    }
+  }
+}

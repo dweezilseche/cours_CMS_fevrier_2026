@@ -1,0 +1,45 @@
+{#
+  Exemple de composant Swiper
+  
+  Utilisation:
+  {% include 'components/swiper-example.twig' with { slides: mon_repeater_acf } %}
+#}
+
+<section class="swiper-section" data-animate>
+  <div class="container">
+    
+    <div class="swiper" data-swiper="hero">
+      <div class="swiper-wrapper">
+        {% for slide in slides %}
+          <div class="swiper-slide">
+            
+            {% if slide.image %}
+              <div class="slide__image">
+                <img src="{{ slide.image.url }}" alt="{{ slide.image.alt }}">
+              </div>
+            {% endif %}
+            
+            <div class="slide__content">
+              {% if slide.title %}
+                <h3 class="slide__title">{{ slide.title }}</h3>
+              {% endif %}
+              
+              {% if slide.description %}
+                <p class="slide__description">{{ slide.description }}</p>
+              {% endif %}
+            </div>
+            
+          </div>
+        {% endfor %}
+      </div>
+      
+      {# Navigation #}
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+      
+      {# Pagination #}
+      <div class="swiper-pagination"></div>
+    </div>
+    
+  </div>
+</section>

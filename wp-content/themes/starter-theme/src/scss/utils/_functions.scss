@@ -1,0 +1,17 @@
+// ------------------------------------ // ------------------------------------------
+// ---------------------------- F U N C T I O N S -----------------------------------
+// ------------------------------------ // ------------------------------------------
+
+@use 'sass:list';
+
+@function z($name) {
+  @if list.index($z-indexes, $name) {
+    @return (list.length($z-indexes) - list.index($z-indexes, $name))+1;
+  }
+
+  @else {
+    @warn 'There is no item "#{$name}" in this list; Choose one of: #{$z-indexes}';
+
+    @return null;
+  }
+}

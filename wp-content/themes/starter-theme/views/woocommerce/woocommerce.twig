@@ -1,0 +1,16 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+<div class="woocommerce-page" style="background: yellow; padding: 20px;">
+    <div class="container">
+        <header class="page-header" style="background: red; color: white; padding: 20px;">
+            <h1 class="page-title">{{ post.title }}</h1>
+            <p style="font-size: 24px; font-weight: bold;">TESSSST - Template woocommerce.twig chargé !</p>
+        </header>
+
+        <div class="woocommerce-content">
+            {{ function('woocommerce_content') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{{#
+/**
+ * Template: Archive des événements
+ */
+#}}
+
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+  <div class="archive-events" data-barba-namespace="archive-events">
+    
+    {# En-tête #}
+    <section class="archive-header">
+      <div class="container">
+        <h1 class="archive-header__title">{{ title }}</h1>
+        
+        {# Filtres #}
+        {% if filters.categories %}
+          <div class="archive-filters">
+            <a href="/evenements" class="archive-filters__item {% if not fn('is_tax', 'app_event_category') %}is-active{% endif %}">
+              Tous
+            </a>
+            {% for category in filters.categories %}
+              <a href="{{ category.link }}" class="archive-filters__item {% if category.id == term.id %}is-active{% endif %}">
+                {{ category.name }}
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    {# Liste des événements #}
+    <section class="archive-content">
+      <div class="container">
+        {% if posts %}
+          <div class="card-grid">
+            {% for event in posts %}
+              {% include 'components/card.twig' with {
+                image: event.thumbnail,
+                title: event.title,
+                excerpt: event.excerpt,
+                link: event.link,
+                badge: event.eventCategory ? event.eventCategory.name : null,
+                meta: {
+                  date: event.eventDate,
+                  location: event.location
+                },
+                footer: {
+                  cta: 'En savoir plus'
+                }
+              } %}
+            {% endfor %}
+          </div>
+
+          {# Pagination #}
+          {% if pagination %}
+            <nav class="pagination">
+              {% if pagination.prev %}
+                <a href="{{ pagination.prev.link }}" class="pagination__link pagination__link--prev">
+                  ← Page précédente
+                </a>
+              {% endif %}
+
+              <div class="pagination__numbers">
+                {% for page in pagination.pages %}
+                  {% if page.link %}
+                    <a href="{{ page.link }}" class="pagination__number {% if page.current %}is-active{% endif %}">
+                      {{ page.title }}
+                    </a>
+                  {% else %}
+                    <span class="pagination__dots">...</span>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              {% if pagination.next %}
+                <a href="{{ pagination.next.link }}" class="pagination__link pagination__link--next">
+                  Page suivante →
+                </a>
+              {% endif %}
+            </nav>
+          {% endif %}
+        {% else %}
+          <div class="no-results">
+            <p>Aucun événement trouvé.</p>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+  </div>
+{% endblock %}

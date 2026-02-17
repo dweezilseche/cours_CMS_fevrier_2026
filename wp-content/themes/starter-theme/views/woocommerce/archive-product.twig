@@ -1,0 +1,32 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+<div class="woocommerce-shop">
+    <div class="container">
+        {# {% if function('woocommerce_breadcrumb') %}
+            <div class="breadcrumb">
+                {{ function('woocommerce_breadcrumb') }}
+            </div>
+        {% endif %} #}
+
+        <header class="shop-header">
+            <h1 class="page-title">{{ function('woocommerce_page_title', false) }}</h1>
+            <p>TESSSST lalalala prout acacalala</p>
+            {{ function('do_action', 'woocommerce_archive_description') }}
+        </header>
+
+        <div class="shop-content">
+            <div class="shop-toolbar">
+                {{ function('woocommerce_result_count') }}
+                {{ function('woocommerce_catalog_ordering') }}
+            </div>
+
+            <div class="products-grid">
+                {# Laisser WooCommerce gérer l'affichage des produits #}
+                {{ function('woocommerce_content') }}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

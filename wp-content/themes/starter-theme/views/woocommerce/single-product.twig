@@ -1,0 +1,70 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+{# Hook AVANT la fiche produit - essential pour notices/schema/plugins #}
+{% do action('woocommerce_before_single_product') %}
+
+<div class="woocommerce-product">
+    <div class="container">
+        {# Fil d'Ariane #}
+        {# {% do action('woocommerce_breadcrumb') %} #}
+
+        <div class="product-layout">
+            {# COLONNE GAUCHE : Images produit #}
+            <div class="product-images">
+                {% do action('woocommerce_before_single_product_summary') %}
+            </div>
+
+            {# COLONNE DROITE : Infos produit (titre, prix, add-to-cart, meta) #}
+            <div class="product-summary">
+                {% do action('woocommerce_single_product_summary') %}
+            </div>
+        </div>
+
+        {# ZONE SOUS LE PRODUIT : Tabs (description, avis), related products #}
+        <div class="product-additional">
+            {% do action('woocommerce_after_single_product_summary') %}
+        </div>
+    </div>
+</div>
+
+{# Hook APRÈS la fiche produit #}
+{% do action('woocommerce_after_single_product') %}
+
+{# 
+HOOKS DÉCLENCHÉS PAR DÉFAUT :
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+woocommerce_before_single_product_summary (priorité 10) :
+  - woocommerce_show_product_sale_flash (10)
+  - woocommerce_show_product_images (20)
+
+woocommerce_single_product_summary (priorité 10) :
+  - woocommerce_template_single_title (5)
+  - woocommerce_template_single_rating (10)
+  - woocommerce_template_single_price (10)
+  - woocommerce_template_single_excerpt (20)
+  - woocommerce_template_single_add_to_cart (30)
+  - woocommerce_template_single_meta (40)
+  - woocommerce_template_single_sharing (50)
+
+woocommerce_after_single_product_summary (priorité 10) :
+  - woocommerce_output_product_data_tabs (10) → tabs description/avis
+  - woocommerce_upsell_display (15)
+  - woocommerce_output_related_products (20)
+
+Pour personnaliser l'ordre ou retirer des éléments, utilisez 
+remove_action() / add_action() dans WooCommerce.php :
+
+public function customizeProductPage(): void {
+    // Retirer le badge "promo"
+    remove_action('woocommerce_before_single_product_summary', 'woocommerce_show_product_sale_flash', 10);
+    
+    // Déplacer le titre après le prix
+    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_title', 5);
+    add_action('woocommerce_single_product_summary', 'woocommerce_template_single_title', 15);
+    
+    // Ajouter du contenu custom
+    add_action('woocommerce_single_product_summary', [$this, 'customContent'], 25);
+}
+#}
+{% endblock %}

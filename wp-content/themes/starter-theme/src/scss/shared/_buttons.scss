@@ -1,0 +1,44 @@
+@use '../utils/variables' as *;
+
+$buttons-themes: // Slug        // Background     // Color
+
+  'black' black white,
+
+;
+
+%button {
+  padding: 1.6rem 2.4rem;
+  border-radius: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-transform: uppercase;
+  transition: transform 500ms $ease;
+  color: black;
+
+  svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &:focus,
+  &:hover {
+    transform: scale(0.95);
+  }
+
+  &.is-min {
+    font-size: 1.2rem;
+    padding: 1.2rem 1.6rem;
+  }
+
+  /*
+  * Themes
+  */
+
+  @each $slug, $background, $color in $buttons-themes {
+    &.is-#{$slug} {
+      background-color: $background;
+      color: $color;
+    }
+  }
+}

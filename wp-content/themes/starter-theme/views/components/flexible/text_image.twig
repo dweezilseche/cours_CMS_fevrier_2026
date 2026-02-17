@@ -1,0 +1,36 @@
+{#
+  Exemple de composant flexible ACF
+  Layout: text_image
+  
+  Champs ACF attendus:
+  - title (text)
+  - text (wysiwyg)
+  - image (image)
+  - image_position (select: left/right)
+#}
+
+<section class="text-image" data-animate>
+  <div class="container">
+    <div class="text-image__inner {{ data.image_position == 'right' ? 'text-image__inner--reverse' : '' }}">
+      
+      <div class="text-image__content">
+        {% if data.title %}
+          <h2 class="text-image__title">{{ data.title }}</h2>
+        {% endif %}
+        
+        {% if data.text %}
+          <div class="text-image__text">
+            {{ data.text }}
+          </div>
+        {% endif %}
+      </div>
+      
+      {% if data.image %}
+        <div class="text-image__image">
+          <img src="{{ data.image.url }}" alt="{{ data.image.alt }}">
+        </div>
+      {% endif %}
+      
+    </div>
+  </div>
+</section>

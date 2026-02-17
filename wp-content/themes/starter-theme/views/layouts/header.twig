@@ -1,0 +1,79 @@
+{#
+  Header du site
+  
+  Contient le logo, la navigation principale et les CTA.
+#}
+<header class="header {{ header.sticky ? 'header--sticky' : '' }} {{ header.transparent ? 'header--transparent' : '' }}" role="banner">
+  <div class="container">
+    <div class="header__inner">
+      
+      {# Logo #}
+      <div class="header__logo">
+        <a href="{{ site.url }}" class="logo" aria-label="Retour à l'accueil">
+          {% if header.logo %}
+            <img src="{{ header.logo.url }}" alt="{{ site.name }}" width="{{ header.logo.width }}" height="{{ header.logo.height }}">
+          {% else %}
+            <span class="logo__text">{{ site.name }}</span>
+          {% endif %}
+        </a>
+      </div>
+      
+      {# Navigation principale #}
+      <nav class="header__nav" role="navigation" aria-label="Navigation principale">
+        {% if menu_header_main %}
+          <ul class="nav">
+            {% for item in menu_header_main.items %}
+              <li class="nav__item {{ item.current ? 'nav__item--current' : '' }}">
+                <a href="{{ item.url }}" class="nav__link">{{ item.title }}</a>
+                
+                {% if item.children %}
+                  <ul class="nav__submenu">
+                    {% for child in item.children %}
+                      <li class="nav__submenu-item">
+                        <a href="{{ child.url }}" class="nav__submenu-link">{{ child.title }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </nav>
+      
+      {# CTA #}
+      {% if header.cta %}
+        <div class="header__cta">
+          {% include 'components/button.twig' with {
+            text: header.cta.text,
+            link: header.cta.link,
+            style: header.cta.style
+          } %}
+        </div>
+      {% endif %}
+      
+      {# Mobile menu toggle #}
+      <button class="header__toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="header__toggle-line"></span>
+        <span class="header__toggle-line"></span>
+        <span class="header__toggle-line"></span>
+      </button>
+      
+    </div>
+  </div>
+  
+  {# Mobile menu #}
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-menu__nav" role="navigation">
+      {% if menu_header_main %}
+        <ul class="mobile-menu__list">
+          {% for item in menu_header_main.items %}
+            <li class="mobile-menu__item">
+              <a href="{{ item.url }}" class="mobile-menu__link">{{ item.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </nav>
+  </div>
+</header>

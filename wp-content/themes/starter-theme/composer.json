@@ -1,0 +1,14 @@
+{
+  "name": "starter-theme-wordpress-woocommerce/starter-theme",
+  "description": "Starter thème WordPress moderne avec Timber",
+  "type": "wordpress-theme",
+  "require": {
+    "php": ">=8.0",
+    "timber/timber": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starter Theme WordPress + WooCommerce\\": "inc/"
+    }
+  }
+}

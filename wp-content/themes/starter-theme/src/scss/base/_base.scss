@@ -1,0 +1,104 @@
+@use '../utils/variables' as *;
+@use '../utils/mixins' as *;
+@use '../utils/responsive' as *;
+
+// ------------------------------------ // ------------------------------------------
+// --------------------------------- B A S E ----------------------------------------
+// ------------------------------------ // ------------------------------------------
+
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// ::-webkit-scrollbar {
+//   display: none;
+//   width: 0;
+//   background-color: transparent;
+// }
+
+// ::selection {
+//   background-color: rgba($black, 0.1);
+//   text-shadow: none;
+// }
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  // -webkit-tap-highlight-color: transparent;
+  // -webkit-user-select: none;
+  // scrollbar-width: none;
+
+  background-color: $white;
+  font-size: var(--font-size-mobile);
+
+  @include media('>=phone', '<tablet') {
+    font-size: var(--font-size-mid);
+  }
+
+  @include media('>=tablet') {
+    font-size: var(--font-size-tablet);
+  }
+
+  @include media('>=hd') {
+    // font-size: var(--font-size-tablet);
+    font-size: 10px;
+  }
+
+  // @include media('>=tablet') {
+  //   font-size: var(--font-size-tablet);
+  // }
+
+  // @include media('>hd') {
+  //   font-size: 10px;
+  // }
+
+  // &.lenis-scrolling {
+  //   * {
+  //     pointer-events: none;
+  //   }
+  // }
+}
+
+body {
+  font: 500 1.7rem / 1.5 $Manrope;
+  color: $black;
+  overscroll-behavior-y: none;
+}
+
+#app {
+  position: relative;
+  z-index: z('app');
+  background-color: $black;
+}
+
+[data-taxi-view] {
+  position: relative;
+  z-index: 0;
+}
+
+[data-lazy] {
+  opacity: 0;
+  transition: opacity 300ms linear;
+  will-change: opacity;
+
+  &.loaded {
+    opacity: 1;
+  }
+}
+
+[data-parallax] {
+  >* {
+    transform: scale(1.15);
+    will-change: transform;
+  }
+}

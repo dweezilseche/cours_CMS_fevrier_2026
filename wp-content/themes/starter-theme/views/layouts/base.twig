@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html {{ site.language_attributes }}>
+<head>
+    <meta charset="{{ site.charset }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {{ function('wp_head') }}
+</head>
+<body class="{{ body_class }}" data-taxi>
+    
+    {% include 'partials/header.twig' %}
+    
+    <main data-taxi-view data-taxi-view-name="{{ post.post_name|default('default') }}">
+        {% block content %}
+            {# Le contenu sera inséré ici #}
+        {% endblock %}
+    </main>
+    
+    {% include 'partials/footer.twig' %}
+    
+    {{ function('wp_footer') }}
+</body>
+</html>

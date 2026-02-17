@@ -1,0 +1,53 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+    
+    <div class="archive-content">
+        <div class="container">
+            
+            <header class="archive__header">
+                <h1 class="archive__title">Actualités</h1>
+            </header>
+            
+            {% if posts %}
+                <div class="posts-grid">
+                    {% for post in posts %}
+                        <article class="post-card">
+                            
+                            {% if post.thumbnail %}
+                                <a href="{{ post.link }}" class="post-card__image">
+                                    <img src="{{ post.thumbnail.src('card') }}" alt="{{ post.thumbnail.alt }}">
+                                </a>
+                            {% endif %}
+                            
+                            <div class="post-card__content">
+                                <h2 class="post-card__title">
+                                    <a href="{{ post.link }}">{{ post.title }}</a>
+                                </h2>
+                                
+                                {% if post.excerpt %}
+                                    <p class="post-card__excerpt">{{ post.excerpt }}</p>
+                                {% endif %}
+                                
+                                <a href="{{ post.link }}" class="post-card__link">Lire la suite</a>
+                            </div>
+                            
+                        </article>
+                    {% endfor %}
+                </div>
+                
+                {# Pagination #}
+                {% if posts.pagination %}
+                    <div class="pagination">
+                        {{ posts.pagination }}
+                    </div>
+                {% endif %}
+                
+            {% else %}
+                <p>Aucun article trouvé.</p>
+            {% endif %}
+            
+        </div>
+    </div>
+    
+{% endblock %}

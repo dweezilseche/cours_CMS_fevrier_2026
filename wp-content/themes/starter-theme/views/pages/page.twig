@@ -1,0 +1,25 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+    
+    <div class="page-content">
+        <div class="container">
+            
+            {% if post %}
+                <article class="page">
+                    
+                    <header class="page__header">
+                        <h1 class="page__title">{{ post.title }}</h1>
+                    </header>
+                    
+                    <div class="page__content">
+                        {{ post.content }}
+                    </div>
+                    
+                </article>
+            {% endif %}
+            
+        </div>
+    </div>
+    
+{% endblock %}

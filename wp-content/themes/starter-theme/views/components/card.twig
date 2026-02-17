@@ -1,0 +1,43 @@
+{#
+  Composant : Card générique
+  
+  Props:
+    - title (string) : Titre de la card
+    - excerpt (string) : Extrait/description
+    - image (object) : Image
+    - link (string) : Lien
+    - date (string) : Date (optionnel)
+    - category (string) : Catégorie (optionnel)
+#}
+
+<article class="card">
+  {% if image %}
+    <div class="card__image">
+      <a href="{{ link }}">
+        <img src="{{ image.src }}" alt="{{ title }}" loading="lazy">
+      </a>
+    </div>
+  {% endif %}
+  
+  <div class="card__content">
+    {% if category %}
+      <span class="card__category">{{ category }}</span>
+    {% endif %}
+    
+    <h3 class="card__title">
+      <a href="{{ link }}">{{ title }}</a>
+    </h3>
+    
+    {% if excerpt %}
+      <p class="card__excerpt">{{ excerpt }}</p>
+    {% endif %}
+    
+    <div class="card__footer">
+      {% if date %}
+        <time class="card__date" datetime="{{ date }}">{{ date }}</time>
+      {% endif %}
+      
+      <a href="{{ link }}" class="card__link">Lire la suite</a>
+    </div>
+  </div>
+</article>

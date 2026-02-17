@@ -1,0 +1,21 @@
+{#
+  Composant : Bouton
+  
+  Props:
+    - text (string) : Texte du bouton
+    - link (string) : URL du lien
+    - style (string) : primary|secondary|outline
+    - size (string) : small|medium|large
+    - icon (string) : Nom de l'icône (optionnel)
+#}
+
+{% set style = style|default('primary') %}
+{% set size = size|default('medium') %}
+{% set classes = 'button button--' ~ style ~ ' button--' ~ size %}
+
+<a href="{{ link }}" class="{{ classes }}">
+  {% if icon %}
+    <i class="button__icon icon-{{ icon }}"></i>
+  {% endif %}
+  <span class="button__text">{{ text }}</span>
+</a>

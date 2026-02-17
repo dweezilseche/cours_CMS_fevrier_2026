@@ -1,0 +1,14 @@
+// Configuration d'include-media avec nos breakpoints
+@use 'include-media/dist/_include-media.scss' as im with ($breakpoints: ('miniphone': 375px,
+    'phone': 550px,
+    'tablet': 768px,
+    'laptop': 1024px,
+    'desktop': 1200px,
+    'hd': 1750px));
+
+// Réexporter le mixin media
+@mixin media($conditions...) {
+  @include im.media($conditions...) {
+    @content;
+  }
+}

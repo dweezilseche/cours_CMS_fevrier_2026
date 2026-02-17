@@ -1,0 +1,22 @@
+{
+  "name": "wokine/cours-cms-muplugin",
+  "description": "Must-Use Plugin cours-cms - Timber, ACF, CPT",
+  "type": "wordpress-muplugin",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.0",
+    "timber/timber": "^2.0"
+  },
+  "require-dev": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/App/",
+      "Wkn\\": "src/Wkn/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+// ------------------------------------ // ------------------------------------------
+// -------------------------------- F O N T S ---------------------------------------
+// ------------------------------------ // ------------------------------------------
+
+// Les fonts sont maintenant gérées via src/js/fonts.js
+// Cette approche permet de résoudre les problèmes de chemins avec Vite en dev/prod
+// 
+// Pour ajouter de nouvelles fonts :
+// 1. Placer les fichiers .woff2 et .woff dans static/fonts/
+// 2. Les importer dans src/js/fonts.js avec ?url
+// 3. Ajouter les règles @font-face dans fonts.js
+//
+// Voir FONTS-SETUP.md pour plus de détails
