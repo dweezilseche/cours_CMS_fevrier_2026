@@ -1,0 +1,66 @@
+# WordPress core
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/xmlrpc.php
+/readme.html
+/license.txt
+
+# Configuration
+wp-config.php
+.htaccess
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build files
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# WordPress uploads
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/cache/
+wp-content/backups/
+
+# WordPress plugins (sauf mu-plugins et themes)
+wp-content/plugins/
+!wp-content/plugins/.gitkeep
+
+# Languages (générés automatiquement)
+wp-content/languages/
+
+# Composer vendor (si non utilisé pour le déploiement)
+# Décommentez si vous voulez ignorer vendor/
+# wp-content/themes/*/vendor/
+# wp-content/mu-plugins/vendor/
