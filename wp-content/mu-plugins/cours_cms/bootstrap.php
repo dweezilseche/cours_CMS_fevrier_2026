@@ -43,6 +43,5 @@
             \App\Controllers\CharmRequestController::class,
             \App\Controllers\ClientController::class,
             \App\Controllers\FAQController::class,
-            \App\WooCommerce::class,
         ]);
     }, 10);

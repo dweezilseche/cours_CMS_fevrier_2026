@@ -154,21 +154,7 @@ class Theme extends WknTheme
             $context['fields'] = GlobalFields::get();
         }
 
-        if (taxonomy_exists('product_tag')) {
-            $context['woocommerce_product_tags'] = Timber::get_terms([
-                'taxonomy' => 'product_tag', 'hide_empty' => true, 'orderby' => 'count', 'order' => 'DESC', 'number' => 5,
-            ]);
-        } else {
-            $context['woocommerce_product_tags'] = [];
-        }
 
-        if (taxonomy_exists('product_cat')) {
-            $uncategorized = get_term_by('slug', 'non-classe', 'product_cat');
-            $exclude_ids = $uncategorized ? [$uncategorized->term_id] : [];
-            $context['woocommerce_product_categories'] = Timber::get_terms([
-                'taxonomy' => 'product_cat', 'hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC', 'exclude' => $exclude_ids,
-            ]);
-        }
         
         if (function_exists('wc_get_page_id')) {
             $context['shop_page_id'] = wc_get_page_id('shop');

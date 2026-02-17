@@ -10,7 +10,7 @@
 
 defined('ABSPATH') || exit;
 
-$cours_cms_bootstrap = __DIR__ . '/odyssee/bootstrap.php';
+$cours_cms_bootstrap = __DIR__ . '/cours_cms/bootstrap.php';
 if (is_readable($cours_cms_bootstrap)) {
     require_once $cours_cms_bootstrap;
 }
