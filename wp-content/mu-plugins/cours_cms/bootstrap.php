@@ -33,6 +33,6 @@
             \App\ClassMapper::class,
             \App\Acf\AcfBlocks::class,
             \App\Acf\AcfContext::class,
-            \App\Controllers\CharmsController::class,
+            \App\Controllers\PlayerController::class,
         ]);
     }, 10);

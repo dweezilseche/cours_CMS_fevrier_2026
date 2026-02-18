@@ -32,7 +32,18 @@ export default defineConfig({
     watch: {
       usePolling: true,
       interval: 100,
+      // Ignore les fichiers qui ne doivent pas déclencher de rechargement
+      ignored: ['**/node_modules/**', '**/dist/**', '**/.git/**'],
     },
+  },
+
+  // Configuration du cache pour éviter les problèmes de références obsolètes
+  cacheDir: 'node_modules/.vite',
+  optimizeDeps: {
+    // Force la reconstruction des dépendances si des fichiers changent
+    force: false, // Mettre à true en cas de problème persistant
+    // Inclure explicitement les dépendances qui posent problème
+    include: ['gsap', 'gsap/ScrollToPlugin', 'gsap/ScrollTrigger', '@unseenco/taxi'],
   },
 
   // Point d'entrée

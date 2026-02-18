@@ -76,6 +76,9 @@ class Theme extends WknTheme
         add_action('admin_head', [self::class, 'admin_custom_styles']);
         add_filter('timber/context', [self::class, 'addToContext']);
 
+        // Donner les capacités de gestion des joueurs aux abonnés (pour qu'ils puissent voir les joueurs dans l'admin)
+        add_action('init', [self::class, 'grantPlayerCaps']);
+
         if (!defined('USE_GUTENBERG') || !constant('USE_GUTENBERG')) {
             add_filter('use_block_editor_for_post', [self::class, 'enable_only_for_landings'], 10, 2);
         }
@@ -84,6 +87,11 @@ class Theme extends WknTheme
         add_filter('file_is_displayable_image', [self::class, 'webp_is_displayable_image'], 10, 2);
         add_filter('upload_size_limit', [self::class, 'increase_upload_limit']);
         add_filter('wp_max_upload_size', [self::class, 'increase_upload_limit']);
+        
+        // Désactiver les wrappers HTML de The Events Calendar pour utiliser Timber
+        add_filter('tribe_events_before_html', '__return_false');
+        add_filter('tribe_events_after_html', '__return_false');
+        add_filter('tribe_template_pre_html', [self::class, 'disableTecTemplateWrapper'], 10, 4);
     }
 
     /**
@@ -92,6 +100,32 @@ class Theme extends WknTheme
     public static function increase_upload_limit(int $size): int
     {
         return 30 * 1024 * 1024; // 30Mo en octets
+    }
+
+    /**
+     * Désactive le wrapper HTML de The Events Calendar pour permettre à Timber
+     * de gérer complètement la structure HTML via base.twig.
+     *
+     * @param mixed $html Le HTML à afficher (peut être null)
+     * @param string $file Le fichier template
+     * @param string|array $name Le nom du template (peut être un tableau)
+     * @param object $template L'objet template
+     * @return false|string|null False pour désactiver le wrapper, ou le HTML
+     */
+    public static function disableTecTemplateWrapper($html, $file, $name, $template)
+    {
+        // Gérer le cas où $name est un tableau
+        if (is_array($name)) {
+            // Ne rien faire, laisser TEC gérer
+            return $html;
+        }
+        
+        // Désactiver le wrapper pour le template default-template/single-event
+        if (is_string($name) && (strpos($name, 'default-template') !== false || strpos($name, 'single-event') !== false)) {
+            return false;
+        }
+        
+        return $html;
     }
 
     /**
@@ -223,27 +257,152 @@ class Theme extends WknTheme
 
     public static function wpm_login_style(): void
     {
+        $theme_uri = esc_url(get_stylesheet_directory_uri());
+        $background = $theme_uri . '/dist/imgs/bg_login.webp';
+        $logo = $theme_uri . '/dist/imgs/logo-blanc.svg';
         ?>
         <style type="text/css">
-            body.login { background: #141414; background: url(<?php echo esc_url(get_stylesheet_directory_uri()); ?>/dist/imgs/background-admin.png) center center no-repeat; background-size: cover; }
-            #login { padding-top: 10% !important; }
-            #loginform { border-radius: 0.625em; border-color: #e1e1e1; }
-            #loginform input { border-color: #e1e1e1; }
-            #login h1 a, .login h1 a { background-image: url(<?php echo esc_url(get_stylesheet_directory_uri()); ?>/dist/imgs/logo_odyssey.png); background-size: contain; width: 152.84px; height: 45px; }
-            #wp-submit { color: #fff; background: #000; border: none; }
-            #language-switcher { display: none; }
-            .dashicons.dashicons-admin-users { color: #000 !important; }
-            .login #backtoblog a, .login #nav a { color: #858585 !important; }
-            .login .message, .login .notice, .login .success { border-left: 4px solid #000 !important; }
-            .dashicons.dashicons-visibility { color: #000; }
-            .privacy-policy-link { color: #fff; }
+            /* Background */
+            body.login {
+                background-image: url('<?php echo $background; ?>');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                min-height: 100vh;
+            }
+
+            /* Login container */
+            #login {   
+                padding-top: 10%!important;
+            }
+
+            /* Form */
+            #loginform {
+                border-radius: 10px;
+                border: 1px solid #e1e1e1;
+            }
+
+            #loginform input {
+                border-color: #e1e1e1;
+            }
+
+            /* Logo */
+            .login h1 a {
+                background-image: url('<?php echo $logo; ?>') !important;
+                background-size: contain !important;
+                background-repeat: no-repeat !important;
+                background-position: center !important;
+                width: 250px !important;
+                height: 100px !important;
+            }
+
+            /* Submit button */
+            #wp-submit {
+                color: #fff;
+                background: #DD531F;
+                border: none;
+                box-shadow: none;
+                text-shadow: none;
+            }
+
+            /* Links */
+            .login #backtoblog a,
+            .login #nav a {
+                color: #fff !important;
+            }
+
+            /* Notices */
+            .login .message,
+            .login .notice,
+            .login .success {
+                border-left: 4px solid #000 !important;
+            }
+
+            /* Icons */
+            .dashicons.dashicons-admin-users,
+            .dashicons.dashicons-visibility {
+                color: #000 !important;
+            }
+
+            /* Misc */
+            #language-switcher {
+                display: none;
+            }
+
+            .privacy-policy-link {
+                color: #fff;
+            }
         </style>
         <?php
     }
 
+
     public static function admin_custom_styles(): void
     {
         echo '<style>.block-editor-block-list__block { max-width: none; }</style>';
+    }
+
+    /**
+     * Accorde les capacités de gestion des joueurs aux différents rôles.
+     * - Administrateurs et éditeurs : toutes les capacités
+     * - Abonnés et clients : lecture seule
+     */
+    public static function grantPlayerCaps(): void
+    {
+        // Toutes les capacités pour les administrateurs et éditeurs
+        $all_capabilities = [
+            'read_app_player',
+            'read_private_app_players',
+            'edit_app_player',
+            'edit_app_players',
+            'edit_others_app_players',
+            'edit_published_app_players',
+            'publish_app_players',
+            'create_app_players',
+            'delete_app_player',
+            'delete_app_players',
+            'delete_others_app_players',
+            'delete_published_app_players',
+        ];
+        
+        // Capacités de lecture seule pour les abonnés
+        $read_only_capabilities = [
+            'read_app_player',
+            'read_private_app_players',
+            'read', // Requis pour accéder à l'admin
+        ];
+        
+        // Administrateurs - Toutes les capacités
+        $admin_role = get_role('administrator');
+        if ($admin_role) {
+            foreach ($all_capabilities as $cap) {
+                $admin_role->add_cap($cap);
+            }
+        }
+        
+        // Éditeurs - Toutes les capacités
+        $editor_role = get_role('editor');
+        if ($editor_role) {
+            foreach ($all_capabilities as $cap) {
+                $editor_role->add_cap($cap);
+            }
+        }
+        
+        // Abonnés - Lecture seule
+        $subscriber_role = get_role('subscriber');
+        if ($subscriber_role) {
+            foreach ($read_only_capabilities as $cap) {
+                $subscriber_role->add_cap($cap);
+            }
+        }
+        
+        // Clients WooCommerce - Lecture seule
+        $customer_role = get_role('customer');
+        if ($customer_role) {
+            foreach ($read_only_capabilities as $cap) {
+                $customer_role->add_cap($cap);
+            }
+        }
     }
 
     /**

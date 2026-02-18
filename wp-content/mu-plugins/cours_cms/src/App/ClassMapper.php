@@ -16,7 +16,9 @@ class ClassMapper extends WknClassMapper
                 default                                => \App\Pages\Page::class,
             },
 
+        'player'                  => \App\PostsTypes\PlayerPostType::class,
             'post'                => \App\Posts\Post::class,
+            'tribe_events'        => \App\Posts\Event::class,
         ];
     }
 
