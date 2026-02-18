@@ -9,6 +9,7 @@ import PageTransitionDefault from './transitions/PageTransitionDefault';
 // General
 import MediasAsyncLoad from '../classes/MediasAsyncLoad';
 import InView from '../classes/InView';
+import Medias from '../classes/Medias';
 
 // Animations
 import Introduction from '../animations/Introduction';
@@ -66,6 +67,10 @@ export default class Taxi {
       },
       inview: {
         class: InView,
+        params: container => [container, { lenis }],
+      },
+      medias: {
+        class: Medias,
         params: container => [container, { lenis }],
       },
       // Partials

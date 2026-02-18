@@ -1,12 +1,16 @@
-{% set img = fields.img %}
+{% set media = fields.media %}
 {% set title = fields.title %}
 
 <div class="hero">
   <div class="hero__container">
     <h1 class="hero__title">{{ title }}</h1>
 
-    {% if img %}
-      <img src="{{ img.url }}" alt="{{ img.alt }}" class="hero__img" />
+    {% if media %}
+      {% include 'components/media.twig' with {
+        class: 'hero__media',
+        media: media,
+        isBackground: true,
+      } only %}
     {% endif %}
   </div>
 </div>

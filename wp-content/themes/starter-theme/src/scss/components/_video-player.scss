@@ -11,7 +11,7 @@
   background-color: black;
   color: $white;
   overflow: hidden;
-  cursor: pointer;
+  pointer-events: none; // Disable interactions on the container to allow custom cursor and controls
 
   --plyr-video-control-background-hover: black;
   --plyr-range-fill-background: black;
