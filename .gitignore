@@ -62,5 +62,5 @@ wp-content/languages/
 
 # Composer vendor (si non utilisé pour le déploiement)
 # Décommentez si vous voulez ignorer vendor/
-# wp-content/themes/*/vendor/
-# wp-content/mu-plugins/vendor/
+wp-content/themes/*/vendor/
+wp-content/mu-plugins/vendor/
