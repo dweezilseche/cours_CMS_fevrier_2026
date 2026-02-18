@@ -1,0 +1,7 @@
+@use '../utils/variables' as *;
+
+%card-blur {
+  background: rgba(126, 126, 126, 0.10);
+  backdrop-filter: blur(1.6rem);
+  color: $white;
+}

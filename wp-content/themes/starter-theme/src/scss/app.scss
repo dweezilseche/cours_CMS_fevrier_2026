@@ -26,6 +26,7 @@
 @use './shared/pages';
 @use './shared/contents';
 @use './shared/sections';
+@use './shared/blur';
 
 // ------------------------------------ // ------------------------------------------
 // --------------------------------- B A S E ----------------------------------------
@@ -42,6 +43,8 @@
 @use './components/link';
 @use './components/picture';
 @use './components/video-player';
+@use './components/subscribers-leaderboard';
+@use './components/card';
 
 // ------------------------------------ // ------------------------------------------
 // ----------------------------- P A R T I A L S ------------------------------------

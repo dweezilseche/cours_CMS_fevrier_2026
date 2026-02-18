@@ -5,6 +5,53 @@
   <div class="hero__container">
     <h1 class="hero__title">{{ title }}</h1>
 
+    <div class="hero__content">
+      <div class="hero__events">
+        <h2 class="hero__events-title">Prochains évènements</h2>
+        {% if latest_posts|length > 0 %}
+          <ul class="hero__news-list">
+            {% for post in latest_posts %}
+              <li class="hero__news-item">
+                {% include 'components/card.twig' with {
+                  link: post.link,
+                  class: 'hero__news-link',
+                  category: post.category,
+                  title: post.title,
+                } only %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="hero__no-news">Aucune actualité pour le moment.</p>
+        {% endif %}
+      </div>
+
+      <div class="hero__news">
+        <h2 class="hero__news-title">Dernières actualités</h2>
+        {% if latest_posts|length > 0 %}
+          <ul class="hero__news-list">
+            {% for post in latest_posts %}
+              <li class="hero__news-item">
+                {% include 'components/card.twig' with {
+                  link: post.link,
+                  class: 'hero__news-link',
+                  category: post.category,
+                  title: post.title,
+                } only %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="hero__no-news">Aucune actualité pour le moment.</p>
+        {% endif %}
+      </div>
+
+      {% include 'components/subscribers-leaderboard.twig' with { 
+          subscribers: subscribers,
+          limit: 10 
+      } %}
+    </div>
+
     {% if media %}
       {% include 'components/media.twig' with {
         class: 'hero__media',

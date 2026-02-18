@@ -72,8 +72,12 @@ class Theme extends WknTheme
         add_action('wp_dashboard_setup', [self::class, 'wpDashboardSetup']);
         add_action('wp_before_admin_bar_render', [self::class, 'wpBeforeAdminBarRender']);
         add_action('admin_menu', [self::class, 'adminRemoveMenus']);
+        add_action('admin_menu', [self::class, 'addMyEventsMenuForSubscribers']);
+        add_action('admin_init', [self::class, 'handleEventUnregister']);
         add_action('login_enqueue_scripts', [self::class, 'wpm_login_style']);
         add_action('admin_head', [self::class, 'admin_custom_styles']);
+        add_action('admin_head', [self::class, 'hideProfileSectionsForSubscribers']);
+        
         add_filter('timber/context', [self::class, 'addToContext']);
 
         // Donner les capacités de gestion des joueurs aux abonnés (pour qu'ils puissent voir les joueurs dans l'admin)
@@ -92,6 +96,8 @@ class Theme extends WknTheme
         add_filter('tribe_events_before_html', '__return_false');
         add_filter('tribe_events_after_html', '__return_false');
         add_filter('tribe_template_pre_html', [self::class, 'disableTecTemplateWrapper'], 10, 4);
+
+        
     }
 
     /**
@@ -212,7 +218,86 @@ class Theme extends WknTheme
         } else {
             $context['cart_count'] = 0;
         }
+        
+        // Ajouter les subscribers avec leurs infos
+        $context['subscribers'] = self::getSubscribersWithInfos();
+        
+        // Ajouter les derniers articles
+        $context['latest_posts'] = self::getLatestPosts(5);
+        
         return $context;
+    }
+
+    /**
+     * Récupère tous les subscribers avec leurs infos ACF (avatar + points).
+     * Retourne un tableau d'utilisateurs triés par points décroissants.
+     */
+    public static function getSubscribersWithInfos(): array
+    {
+        $subscribers = [];
+        
+        // Récupérer tous les utilisateurs avec le rôle subscriber ou customer
+        $users = get_users([
+            'role__in' => ['subscriber', 'customer'],
+            'orderby' => 'registered',
+            'order' => 'DESC',
+        ]);
+        
+        if (!empty($users)) {
+            foreach ($users as $user) {
+                // Récupérer les champs ACF
+                $infos = get_field('infos', 'user_' . $user->ID);
+                
+                $subscriber_data = [
+                    'id' => $user->ID,
+                    'username' => $user->user_login,
+                    'display_name' => $user->display_name,
+                    'email' => $user->user_email,
+                    'registered' => $user->user_registered,
+                    'avatar' => null,
+                    'points' => 0,
+                ];
+                
+                // Récupérer les infos du groupe field
+                if ($infos) {
+                    if (isset($infos['avatar']) && !empty($infos['avatar'])) {
+                        $subscriber_data['avatar'] = $infos['avatar'];
+                    }
+                    if (isset($infos['points']) && is_numeric($infos['points'])) {
+                        $subscriber_data['points'] = (int) $infos['points'];
+                    }
+                }
+                
+                $subscribers[] = $subscriber_data;
+            }
+        }
+        
+        // Trier par points décroissants
+        usort($subscribers, function($a, $b) {
+            return $b['points'] - $a['points'];
+        });
+        
+        return $subscribers;
+    }
+
+    /**
+     * Récupère les derniers articles publiés.
+     * 
+     * @param int $count Nombre d'articles à récupérer
+     * @return \Timber\PostCollectionInterface|array
+     */
+    public static function getLatestPosts()
+    {
+        $args = [
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'posts_per_page' => '-1',
+            'orderby' => 'date',
+            'order' => 'DESC',
+        ];
+        
+        $posts = Timber::get_posts($args);
+        return $posts ?: [];
     }
 
     public static function wpDashboardSetup(): void
@@ -232,6 +317,16 @@ class Theme extends WknTheme
         $wp_admin_bar->remove_node('wp-logo');
         $wp_admin_bar->remove_node('updates');
         $wp_admin_bar->remove_node('comments');
+        
+        // Ajouter un lien "Mes évènements" pour les subscribers et customers
+        $user = wp_get_current_user();
+        if (in_array('subscriber', $user->roles) || in_array('customer', $user->roles)) {
+            $wp_admin_bar->add_node([
+                'id'    => 'my-events',
+                'title' => '<span class="ab-icon dashicons-calendar-alt"></span>' . __('Mes évènements', 'app'),
+                'href'  => admin_url('admin.php?page=my-events'),
+            ]);
+        }
     }
 
     /**
@@ -253,6 +348,272 @@ class Theme extends WknTheme
         foreach ($pages as $page) {
             remove_menu_page($page);
         }
+    }
+
+    /**
+     * Ajoute un menu "Mes évènements" pour les subscribers et customers.
+     */
+    public static function addMyEventsMenuForSubscribers(): void
+    {
+        $user = wp_get_current_user();
+        
+        // Ajouter le menu seulement pour subscribers et customers
+        if (in_array('subscriber', $user->roles) || in_array('customer', $user->roles)) {
+            add_menu_page(
+                __('Mes évènements', 'app'),
+                __('Mes évènements', 'app'),
+                'read',
+                'my-events',
+                [self::class, 'renderMyEventsPage'],
+                'dashicons-calendar-alt',
+                25
+            );
+        }
+    }
+
+    /**
+     * Gère la désinscription d'un événement.
+     */
+    public static function handleEventUnregister(): void
+    {
+        if (!isset($_GET['action']) || $_GET['action'] !== 'unregister_event') {
+            return;
+        }
+        
+        if (!isset($_GET['attendee_id']) || !isset($_GET['_wpnonce'])) {
+            return;
+        }
+        
+        $attendee_id = intval($_GET['attendee_id']);
+        $nonce = sanitize_text_field($_GET['_wpnonce']);
+        
+        // Vérifier le nonce
+        if (!wp_verify_nonce($nonce, 'unregister_event_' . $attendee_id)) {
+            wp_die(__('Action non autorisée.', 'app'));
+        }
+        
+        // Vérifier que l'utilisateur est connecté
+        if (!is_user_logged_in()) {
+            wp_die(__('Vous devez être connecté.', 'app'));
+        }
+        
+        $current_user_id = get_current_user_id();
+        $user_email = wp_get_current_user()->user_email;
+        
+        // Vérifier via l'API Event Tickets que cet attendee appartient à l'utilisateur
+        $is_user_attendee = false;
+        $found_event_id = null;
+        
+        if (function_exists('tribe_tickets_get_attendees')) {
+            // Récupérer tous les événements avec tickets
+            $events_query = new \WP_Query([
+                'post_type' => 'tribe_events',
+                'posts_per_page' => -1,
+                'post_status' => 'publish',
+            ]);
+            
+            if ($events_query->have_posts()) {
+                while ($events_query->have_posts()) {
+                    $events_query->the_post();
+                    $event_id = get_the_ID();
+                    
+                    // Récupérer les attendees pour cet événement
+                    $attendees = tribe_tickets_get_attendees($event_id);
+                    
+                    if (!empty($attendees)) {
+                        foreach ($attendees as $attendee) {
+                            // Vérifier si cet attendee correspond à celui qu'on veut supprimer
+                            if (isset($attendee['attendee_id']) && (int) $attendee['attendee_id'] === $attendee_id) {
+                                // Vérifier si cet attendee appartient à l'utilisateur courant
+                                $attendee_user_id = isset($attendee['user_id']) ? (int) $attendee['user_id'] : 0;
+                                $attendee_email = isset($attendee['purchaser_email']) ? $attendee['purchaser_email'] : '';
+                                
+                                if ($attendee_user_id === $current_user_id || $attendee_email === $user_email) {
+                                    $is_user_attendee = true;
+                                    $found_event_id = $event_id;
+                                    break 2; // Sortir des deux boucles
+                                }
+                            }
+                        }
+                    }
+                }
+                wp_reset_postdata();
+            }
+        }
+        
+        if ($is_user_attendee) {
+            // Supprimer l'attendee
+            $deleted = wp_delete_post($attendee_id, true);
+            
+            if ($deleted && $found_event_id) {
+                // Vider tous les caches possibles pour cet événement
+                wp_cache_delete($found_event_id, 'tribe_attendees');
+                wp_cache_delete('attendees_' . $found_event_id, 'tribe_events');
+                delete_transient('tribe_attendees_' . $found_event_id);
+                
+                // Déclencher l'action de suppression d'attendee
+                do_action('event_tickets_after_delete_ticket', $attendee_id, $found_event_id);
+                
+                wp_redirect(add_query_arg([
+                    'page' => 'my-events',
+                    'message' => 'unregistered',
+                    'nocache' => time() // Forcer le rechargement
+                ], admin_url('admin.php')));
+                exit;
+            } elseif ($deleted) {
+                wp_redirect(add_query_arg([
+                    'page' => 'my-events',
+                    'message' => 'unregistered',
+                    'nocache' => time()
+                ], admin_url('admin.php')));
+                exit;
+            } else {
+                wp_redirect(add_query_arg([
+                    'page' => 'my-events',
+                    'message' => 'error'
+                ], admin_url('admin.php')));
+                exit;
+            }
+        } else {
+            wp_die(__('Vous ne pouvez pas vous désinscrire de cet événement. ID: ' . $attendee_id, 'app'));
+        }
+        
+        // Si on arrive ici, c'est qu'il y a eu un problème
+        wp_redirect(add_query_arg([
+            'page' => 'my-events',
+            'message' => 'error'
+        ], admin_url('admin.php')));
+        exit;
+    }
+
+    /**
+     * Affiche la page "Mes évènements" avec la liste des événements auxquels l'utilisateur est inscrit.
+     */
+    public static function renderMyEventsPage(): void
+    {
+        $current_user_id = get_current_user_id();
+        $user_email = wp_get_current_user()->user_email;
+        
+        // Récupérer tous les attendees pour cet utilisateur
+        $user_events = [];
+        
+        if (function_exists('tribe_tickets_get_attendees')) {
+            // Récupérer tous les événements avec tickets
+            $events_query = new \WP_Query([
+                'post_type' => 'tribe_events',
+                'posts_per_page' => -1,
+                'post_status' => 'publish',
+            ]);
+            
+            if ($events_query->have_posts()) {
+                while ($events_query->have_posts()) {
+                    $events_query->the_post();
+                    $event_id = get_the_ID();
+                    
+                    // Récupérer les attendees pour cet événement
+                    $attendees = tribe_tickets_get_attendees($event_id);
+                    
+                    if (!empty($attendees)) {
+                        foreach ($attendees as $attendee) {
+                            // Vérifier si cet attendee correspond à l'utilisateur courant
+                            $attendee_user_id = isset($attendee['user_id']) ? (int) $attendee['user_id'] : 0;
+                            $attendee_email = isset($attendee['purchaser_email']) ? $attendee['purchaser_email'] : '';
+                            
+                            if ($attendee_user_id === $current_user_id || $attendee_email === $user_email) {
+                                $user_events[] = [
+                                    'event_id' => $event_id,
+                                    'event_title' => get_the_title($event_id),
+                                    'event_url' => get_permalink($event_id),
+                                    'ticket_name' => isset($attendee['product_name']) ? $attendee['product_name'] : '',
+                                    'order_status' => isset($attendee['order_status']) ? $attendee['order_status'] : '',
+                                    'attendee_id' => isset($attendee['attendee_id']) ? $attendee['attendee_id'] : '',
+                                ];
+                                break; // Un seul enregistrement par événement
+                            }
+                        }
+                    }
+                }
+                wp_reset_postdata();
+            }
+        }
+        
+        ?>
+        <div class="wrap">
+            <h1><?php echo esc_html__('Mes évènements', 'app'); ?></h1>
+            
+            <?php
+            // Afficher les messages
+            if (isset($_GET['message'])) {
+                $message = sanitize_text_field($_GET['message']);
+                if ($message === 'unregistered') {
+                    echo '<div class="notice notice-success is-dismissible"><p>';
+                    echo esc_html__('Vous avez été désinscrit de l\'événement avec succès.', 'app');
+                    echo '</p></div>';
+                } elseif ($message === 'error') {
+                    echo '<div class="notice notice-error is-dismissible"><p>';
+                    echo esc_html__('Une erreur s\'est produite lors de la désinscription.', 'app');
+                    echo '</p></div>';
+                }
+            }
+            ?>
+            
+            <?php if (empty($user_events)) : ?>
+                <p><?php echo esc_html__('Vous n\'êtes inscrit à aucun événement pour le moment.', 'app'); ?></p>
+            <?php else : ?>
+                <table class="wp-list-table widefat fixed striped">
+                    <thead>
+                        <tr>
+                            <th><?php echo esc_html__('Événement', 'app'); ?></th>
+                            <th><?php echo esc_html__('Type de ticket', 'app'); ?></th>
+                            <th><?php echo esc_html__('Statut', 'app'); ?></th>
+                            <th><?php echo esc_html__('Action', 'app'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($user_events as $event) : ?>
+                            <tr>
+                                <td>
+                                    <strong>
+                                        <a href="<?php echo esc_url($event['event_url']); ?>">
+                                            <?php echo esc_html($event['event_title']); ?>
+                                        </a>
+                                    </strong>
+                                </td>
+                                <td><?php echo esc_html($event['ticket_name']); ?></td>
+                                <td>
+                                    <?php 
+                                    $status = $event['order_status'];
+                                    $status_label = $status ? ucfirst($status) : __('Confirmé', 'app');
+                                    echo esc_html($status_label);
+                                    ?>
+                                </td>
+                                <td>
+                                    <a href="<?php echo esc_url($event['event_url']); ?>" class="button button-secondary">
+                                        <?php echo esc_html__('Voir l\'événement', 'app'); ?>
+                                    </a>
+                                    <?php if ($event['attendee_id']) : 
+                                        $unregister_url = wp_nonce_url(
+                                            add_query_arg([
+                                                'action' => 'unregister_event',
+                                                'attendee_id' => $event['attendee_id']
+                                            ], admin_url('admin.php')),
+                                            'unregister_event_' . $event['attendee_id']
+                                        );
+                                    ?>
+                                    <a href="<?php echo esc_url($unregister_url); ?>" 
+                                       class="button button-link-delete" 
+                                       onclick="return confirm('<?php echo esc_js(__('Êtes-vous sûr de vouloir vous désinscrire de cet événement ?', 'app')); ?>');">
+                                        <?php echo esc_html__('Se désinscrire', 'app'); ?>
+                                    </a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </div>
+        <?php
     }
 
     public static function wpm_login_style(): void
@@ -340,6 +701,45 @@ class Theme extends WknTheme
     public static function admin_custom_styles(): void
     {
         echo '<style>.block-editor-block-list__block { max-width: none; }</style>';
+    }
+
+    /**
+     * Cache les sections inutiles de la page de profil pour les abonnés.
+     */
+    public static function hideProfileSectionsForSubscribers(): void
+    {
+        // Vérifier si on est sur la page de profil
+        $screen = get_current_screen();
+        if (!$screen || ($screen->id !== 'profile' && $screen->id !== 'user-edit')) {
+            return;
+        }
+
+        // Vérifier si l'utilisateur est un abonné (subscriber ou customer)
+        $user = wp_get_current_user();
+        if (!in_array('subscriber', $user->roles) && !in_array('customer', $user->roles)) {
+            return;
+        }
+
+        // Masquer les sections pour les abonnés
+        ?>
+        <style type="text/css">
+            /* Masquer le jeu de couleurs de l'administration */
+            .user-admin-color-wrap,
+            
+            /* Masquer la barre d'outils */
+            .show-admin-bar,
+            
+            /* Masquer l'illustration du profil (avatar/gravatar) */
+            .user-profile-picture,
+            .user-description-wrap {
+                display: none !important;
+            }
+
+            .application-passwords-section{
+                display: none !important;;
+            }
+        </style>
+        <?php
     }
 
     /**
@@ -449,4 +849,6 @@ class Theme extends WknTheme
         }
         return $filename;
     }
+    
+
 }

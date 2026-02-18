@@ -1,0 +1,64 @@
+{#
+  Composant : Classement des joueurs (subscribers)
+
+#}
+
+{% set subscribers_list = subscribers|default([]) %}
+{% set limit = limit|default(0) %}
+
+{% if subscribers_list|length > 0 %}
+    <div class="subscribers-leaderboard">
+        <h2 class="leaderboard__title">Classement du championnat</h2>
+
+        <div class="leaderboard__header">
+            <span class="header-rank">Rang</span>
+            <span class="header-info">Joueur</span>
+            <span class="header-points">Points</span>
+        </div>
+        
+        <div class="leaderboard__list">
+            {% for subscriber in subscribers_list %}
+                {% if limit == 0 or loop.index <= limit %}
+                    <div class="leaderboard__item">
+                        <div class="leaderboard__rank">
+                            <span class="rank-number">
+                                {% if loop.index == 1 %}
+                                    {{ loop.index }}<sup>er</sup>
+                                {% elseif loop.index == 2 %}
+                                    {{ loop.index }}<sup>e</sup>
+                                {% elseif loop.index == 3 %}
+                                    {{ loop.index }}<sup>e</sup>
+                                {% else %}
+                                    #{{ loop.index }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="leaderboard__avatar {{ loop.index == 1 ? 'leaderboard__avatar--first' : '' }} {{ loop.index == 2 ? 'leaderboard__avatar--second' : '' }} {{ loop.index == 3 ? 'leaderboard__avatar--third' : '' }}">
+                            {% if subscriber.avatar %}
+                                <img src="{{ subscriber.avatar.url }}" 
+                                     alt="{{ subscriber.display_name }}"
+                                     class="leaderboard__avatar-image">
+                            {% else %}
+                                <div class="avatar-placeholder">
+                                    {{ subscriber.display_name|first|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="leaderboard__info">
+                            <p class="subscriber-username">@{{ subscriber.username }}</p>
+                        </div>
+                        
+                        <div class="leaderboard__points">
+                            <span class="leaderboard__points--value">{{ subscriber.points }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <p class="leaderboard__empty">Aucun joueur inscrit pour le moment.</p>
+{% endif %}
+

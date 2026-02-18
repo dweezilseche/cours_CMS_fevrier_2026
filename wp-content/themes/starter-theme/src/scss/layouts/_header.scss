@@ -3,6 +3,7 @@
 @use '../utils/responsive' as *;
 @use '../shared/misc' as *;
 @use '../shared/links' as *;
+@use '../shared/blur' as *;
 
 // Container
 #header {
@@ -11,7 +12,7 @@
   left: 0;
   width: 100%;
   z-index: 100;
-  border-radius: var(--border-radius);
+  border-radius: 0.8rem;
   overflow: hidden;
 }
 
@@ -44,8 +45,7 @@
 
 // Nav
 .header__nav {
-  background: rgba(0, 0, 0, 0.30);
-  backdrop-filter: blur(1.4rem);
+  @extend %card-blur;
   border-radius: var(--border-radius);
 }
 

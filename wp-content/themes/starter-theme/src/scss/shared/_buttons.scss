@@ -3,7 +3,7 @@
 
 $buttons-themes: // Slug        // Background     // Color
 
-  'white' rgba(0, 0, 0, 0.20) $white,
+  'white' rgba(255, 255, 255, 0.20) $white,
   'black' rgba(0, 0, 0, 0) $black,
   'beige'$beige $black,
   'full-black'$black $white,
@@ -11,20 +11,23 @@ $buttons-themes: // Slug        // Background     // Color
 ;
 
 %button {
-  border-radius: 0.4rem;
+  --bevel: 1.5rem;
+
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
   transition: transform 500ms $ease;
   color: $white;
-  border: 0.1rem solid rgba($white, 0.3);
   font: 500 1.4rem / 1 $FranklinGothic;
   // background: rgba(0, 0, 0, 0.20);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(0.5rem);
+  clip-path: polygon(9.5% 0%, 90.5% 0%, 100% 50%, 90.5% 100%, 9.5% 100%, 0% 50%);
+  width: calc(100% + 1.4rem);
 
   @include media('>=tablet') {
     font: 500 1.2rem / 1 $FranklinGothic;
   }
+
 
   &:focus,
   &:hover {
@@ -32,7 +35,7 @@ $buttons-themes: // Slug        // Background     // Color
   }
 
   &.is-normal {
-    padding: 1.6rem 1.6rem;
+    padding: 0.8rem 0rem 0.8rem 2.4rem;
   }
 
   &.is-cart {
@@ -69,7 +72,7 @@ $buttons-themes: // Slug        // Background     // Color
     justify-content: center;
 
     &:hover {
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(0.5rem);
     }
 
     &:focus,
@@ -86,14 +89,46 @@ $buttons-themes: // Slug        // Background     // Color
     position: relative;
     width: 1.4rem;
     height: 1.4rem;
-    overflow: hidden;
+    z-index: 1;
+    // overflow: hidden;
+  }
+
+  &.button--no-text {
+    background-color: none;
+    backdrop-filter: none;
+
+    &::before,
+    &::after {
+      display: none !important;
+    }
+  }
+
+  .button__polygon-container {
+    width: 4.2rem;
+    height: 3.7rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(0.5rem);
+  }
+
+  .polygon {
+    color: $white;
+    position: absolute;
+    width: 4.2rem;
+    height: 3.7rem;
+    top: 0;
+    z-index: 0;
   }
 
   .button__icon {
     width: 1.4rem;
     height: 1.4rem;
     position: absolute;
+    color: $black;
     transition: transform 850ms $ease-out-quart;
+    z-index: 1;
 
     &:nth-child(1) {
       transform: translateX(-100%) scale(0);
@@ -123,6 +158,11 @@ $buttons-themes: // Slug        // Background     // Color
       background-color: $background;
       color: $color;
       border-color: rgba($color, 0.3);
+
+      &::before,
+      &::after {
+        background: $background;
+      }
     }
   }
 }

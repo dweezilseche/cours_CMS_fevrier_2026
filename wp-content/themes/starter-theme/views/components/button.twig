@@ -9,7 +9,7 @@
 {% endif %}
 
 <{{ htmlTag }}
-  class="button{% if class %} {{ class }}{% endif %}"
+  class="button{% if class %} {{ class }}{% endif %}{% if noText %} button--no-text{% endif %}"
   {% if id %}id="{{ id }}"{% endif %}
   {% if button.url %}href="{{ button.url }}"{% endif %}
   {% if button.type %} type="{{ button.type }}"{% endif %}
@@ -27,12 +27,17 @@
   {% endif %}
   
   {% if not noIcon %}
-    <div class="button__icon-wrapper">
-    {% for i in 1..2 %}
-        <svg class="button__icon{% if icon_alt is defined and icon_alt and i == 2 %} button__icon--alt{% endif %}">
-          <use href="#{{ i == 2 and icon_alt is defined and icon_alt ? icon_alt : icon }}"></use>
-        </svg>
-    {% endfor %}
+    <div class="button__polygon-container">
+      <div class="button__icon-wrapper">
+      {% for i in 1..2 %}
+          <svg class="button__icon{% if icon_alt is defined and icon_alt and i == 2 %} button__icon--alt{% endif %}">
+            <use href="#{{ i == 2 and icon_alt is defined and icon_alt ? icon_alt : icon }}"></use>
+          </svg>
+      {% endfor %}
+      </div>
+      <svg class="polygon" >
+        <use href="#polygon"></use>
+      </svg>
     </div>
   {% endif %}
 </{{ htmlTag }}>

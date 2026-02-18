@@ -81,8 +81,10 @@
   }
 }
 
-%chapo {
-  @extend %content-basic;
+%text-card {
+  font: 400 1.5rem / 1.4 $FranklinGothic;
+}
 
-  font: 400 2.7rem / 1.5 $FranklinGothic;
+%text-small {
+  font: 500 1.2rem / 1.4 $FranklinGothic;
 }
