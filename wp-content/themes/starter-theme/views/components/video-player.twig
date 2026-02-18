@@ -1,0 +1,42 @@
+{% set type = video.type %}
+{% set file = video.file %}
+{% set youtube_id = video.youtube_id %}
+{% set cover = video.cover %}
+
+{% if file.url or youtube_id %}
+  <div class="video-player{% if class %} {{ class }}{% endif %}">
+    {% if type == 'youtube' and youtube_id %}
+      {# OLD WAY: LIGHTHOUSE IMPACT +++ #}
+      {# <div class="plyr__video-embed" id="player">
+        <iframe
+          src="https://www.youtube.com/embed/{{ youtube_id }}?enablejsapi=1&origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0"
+          allowfullscreen
+          allowtransparency
+          allow="autoplay"
+        ></iframe>
+      </div> #}
+
+      {# NEW WAY: BETTER LIGHTHOUSE SCORES #}
+      <div class="plyr__video-embed" id="player" data-plyr-provider="youtube" data-plyr-embed-id="{{ youtube_id }}"></div>
+
+    {% elseif type == 'internal' and file.url %}
+      <video id="player" playsinline controls>
+        <source src="{{ file.url }}" type="video/mp4" />
+      </video>
+    {% endif %}
+
+    <div class="video-player__cover">
+      {% if cover %}
+        {% include 'components/picture.twig' with {
+          class: 'video-player__cover__img',
+          lazyload: true,
+          picture: cover
+        } only %}
+      {% endif %}
+    </div>
+
+    <div class="video-player__cursor">
+      <span>Lire la vidéo</span>
+    </div>
+  </div>
+{% endif %}

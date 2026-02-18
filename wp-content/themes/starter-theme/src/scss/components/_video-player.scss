@@ -1,0 +1,88 @@
+@use '../utils/variables' as *;
+@use '../utils/responsive' as *;
+@use '../utils/mixins' as *;
+@use '../shared/misc' as *;
+
+.video-player {
+  position: relative;
+  width: 100%;
+  // max-width: 120rem;
+  margin: 0 auto;
+  background-color: black;
+  color: $white;
+  overflow: hidden;
+  cursor: pointer;
+
+  --plyr-video-control-background-hover: black;
+  --plyr-range-fill-background: black;
+
+  &:not(.is-background) {
+    aspect-ratio: 16/9;
+  }
+
+  &.is-background {
+    #player {
+      object-fit: cover;
+    }
+  }
+
+  &.is-portrait {
+    aspect-ratio: 4/5;
+  }
+}
+
+.plyr__control.plyr__control--overlaid {
+  display: none !important;
+}
+
+.video-player__cover {
+  @extend %cover-absolute;
+  background-color: black;
+  transition: opacity 500ms $ease;
+
+  .plyr--playing~& {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  picture {
+    @extend %cover-absolute;
+
+    &,
+    &[data-lazy].loaded {
+      opacity: 0.4;
+
+    }
+
+    img {
+      @extend %cover-absolute;
+      object-fit: cover;
+    }
+  }
+}
+
+.plyr__video-embed,
+.plyr__video-wrapper--fixed-ratio {
+  aspect-ratio: 16/9 !important;
+}
+
+.plyr__controls,
+.video-player__cursor {
+  .video-player.is-background & {
+    display: none !important;
+  }
+}
+
+.video-player__cursor {
+  @extend %center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: none;
+
+  .plyr--playing~& {
+    opacity: 0;
+  }
+}

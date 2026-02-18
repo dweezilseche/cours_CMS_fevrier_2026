@@ -82,6 +82,16 @@ class Theme extends WknTheme
         add_filter('allowed_block_types_all', [self::class, 'allowed_block_types_all'], 10, 2);
         add_filter('upload_mimes', [self::class, 'allow_webp_upload']);
         add_filter('file_is_displayable_image', [self::class, 'webp_is_displayable_image'], 10, 2);
+        add_filter('upload_size_limit', [self::class, 'increase_upload_limit']);
+        add_filter('wp_max_upload_size', [self::class, 'increase_upload_limit']);
+    }
+
+    /**
+     * Augmente la limite de téléversement à 30Mo.
+     */
+    public static function increase_upload_limit(int $size): int
+    {
+        return 30 * 1024 * 1024; // 30Mo en octets
     }
 
     /**

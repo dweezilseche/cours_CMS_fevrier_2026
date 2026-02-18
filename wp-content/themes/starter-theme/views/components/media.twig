@@ -1,0 +1,19 @@
+{% set type = media.type %}
+{% set img = media.img %}
+{% set video = media.video %}
+
+{% set player_class = isBackground ? 'media__video is-background' : 'media__video' %}
+{% set player_format = isPortrait ? 'media__video is-portrait' : 'media__video' %}
+
+{% if type == 'img' and img %}
+  {% include 'components/picture.twig' with {
+    class: 'media__img' ~ (class ? ' ' ~ class),
+    lazyload: true,
+    picture: img
+  } only %}
+{% elseif type == 'video' and (video.file or video.youtube_id) %}
+  {% include 'components/video-player.twig' with {
+    class: player_class ~ ' ' ~ player_format ~ (class ? ' ' ~ class),
+    video: video,
+  } %}
+{% endif %}
