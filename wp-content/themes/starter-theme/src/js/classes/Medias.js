@@ -24,7 +24,7 @@ export default class Medias {
 
     setTimeout(_ => {
       this.setPlayers();
-    }, 2700);
+    }, 0); // Delay to ensure videos are properly initialized, especially when loaded via PJAX
   }
 
   /**
@@ -66,7 +66,7 @@ export default class Medias {
         plyr.on('ready', _ => {
           plyr.muted = true;
           plyr.loop = true;
-          plyr.play();
+          // plyr.play();
         });
       } else {
         // Add cursor animations
