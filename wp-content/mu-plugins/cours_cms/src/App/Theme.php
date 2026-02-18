@@ -2,7 +2,8 @@
 
 namespace App;
 
-use App\Acf\GlobalFields;
+use App\Acf\AcfBlocks;
+use App\Acf\AcfContext;
 use Timber\Timber;
 use Wkn\Theme as WknTheme;
 
@@ -156,11 +157,8 @@ class Theme extends WknTheme
             $context['logo'] = Timber::get_post($custom_logo_id);
         }
 
-        if (class_exists(GlobalFields::class)) {
-            $context['fields'] = GlobalFields::get();
-        }
-
-
+        // ACF fields are automatically available on post objects (e.g., post.hero, post.our_concept)
+        // via Timber's built-in ACF integration
         
         if (function_exists('wc_get_page_id')) {
             $context['shop_page_id'] = wc_get_page_id('shop');

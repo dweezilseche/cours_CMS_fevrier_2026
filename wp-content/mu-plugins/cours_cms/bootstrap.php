@@ -34,6 +34,5 @@
             \App\Acf\AcfBlocks::class,
             \App\Acf\AcfContext::class,
             \App\Controllers\CharmsController::class,
-            \App\Controllers\FAQController::class,
         ]);
     }, 10);

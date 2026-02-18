@@ -1,7 +1,6 @@
 const mode = import.meta.env.MODE;
 
-// IMPORTANT: Import fonts BEFORE styles
-// This ensures @font-face rules are available when CSS is parsed
+// Import fonts (Vite will process and generate correct URLs)
 import './fonts';
 
 // Import styles
@@ -20,8 +19,8 @@ import { getDocumentDimensions } from './utils/getDocumentDimensions';
 import { scrollToAnchor } from './utils/scrollToAnchor';
 
 import Preloader from './layouts/Preloader';
-import Header from './layouts/header';
-import Footer from './layouts/footer';
+import Header from './layouts/Header';
+import Footer from './layouts/Footer';
 
 class App {
   constructor() {
@@ -67,7 +66,6 @@ class App {
         orientation: 'vertical',
       });
 
-      this.lenis.stop();
       window.lenis = this.lenis;
     }
   }

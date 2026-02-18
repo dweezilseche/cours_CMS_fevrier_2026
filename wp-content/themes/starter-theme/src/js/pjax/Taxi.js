@@ -11,7 +11,7 @@ import MediasAsyncLoad from '../classes/MediasAsyncLoad';
 import InView from '../classes/InView';
 
 // Animations
-import Introduction from '../animations/Introduction/index.js';
+import Introduction from '../animations/Introduction';
 
 // Layout - Partials
 
@@ -34,12 +34,23 @@ export default class Taxi {
     this.core = new Core({
       links: 'a:not([target]):not([href^=\\#]):not([data-taxi-ignore])',
       removeOldContent: false,
+      enablePrefetch: false, // avoid createCacheEntry error when prefetched page has no [data-taxi-view]
       renderers: {},
       transitions: {
         default: PageTransitionDefault,
       },
       hooks: {
-        beforeLeave: () => {},
+        beforeLeave: () => {
+          // Actions avant de quitter la page
+          if (this.header && window.innerWidth < 768) {
+            this.header.closeMenu();
+            this.header.closeSecondaryMobile();
+          }
+
+          if (this.lenis) {
+            this.lenis.stop();
+          }
+        },
         afterLeave: () => {
           this.destroyInstances();
         },
@@ -58,10 +69,33 @@ export default class Taxi {
         params: container => [container, { lenis }],
       },
       // Partials
+      // mediasSlider: add when MediasSlider class exists and is imported
+
+      // Animations
+      introduction: {
+        class: Introduction,
+        params: container => [container, { lenis }],
+      },
     };
 
     this.setupEventListeners();
+    this.markWooCommerceLinksAsIgnore();
     this.onDOMContentLoaded();
+  }
+
+  /**
+   * Ajoute data-taxi-ignore aux liens panier/checkout/compte (y compris ceux générés par WooCommerce).
+   * À appeler au chargement initial et après chaque entrée PJAX.
+   */
+  markWooCommerceLinksAsIgnore(container = document) {
+    const root = container && container.body ? container.body : container || document.body;
+    const wooPaths = ['/panier', '/cart', '/checkout', '/mon-compte', '/my-account'];
+    root.querySelectorAll('a[href]').forEach(a => {
+      const href = (a.getAttribute('href') || '').toLowerCase();
+      if (wooPaths.some(path => href.includes(path))) {
+        a.setAttribute('data-taxi-ignore', '');
+      }
+    });
   }
 
   /**
@@ -108,51 +142,72 @@ export default class Taxi {
 
     const page = document.body.querySelector('[data-taxi-view]');
 
-    this.introduction = new Introduction(document, {
-      lenis: this.lenis,
-      delay: 0,
-    });
+    if (this.header) {
+      this.header.updateTheme(document.querySelector('[data-taxi-view]'));
+    }
   }
 
-  onEnter({ to, trigger }) {
+  onEnter({ to }) {
+    // 1. Kill triggers
+    ScrollTrigger.getAll().forEach(t => t.kill());
+
+    // 2. Destroy modules
+    this.destroyInstances();
+
+    // 3. Init new page
     const page = to.renderer.content;
+    this.initializeClasses(page);
 
-    if (this.header) {
-      this.header.reset();
-    }
+    // 4. Liens WooCommerce (panier/checkout/compte) en full page
+    this.markWooCommerceLinksAsIgnore(page);
 
-    this.initializeClasses(page, { delay: 0 });
+    // 5. Refresh
+    ScrollTrigger.refresh();
   }
 
   onEnterCompleted({ from, to, trigger }) {
+    // Sur mobile : forcer la fermeture du menu et du menu secondaire (au cas où beforeLeave n’a pas suffi)
+    if (this.header && window.innerWidth < 768) {
+      this.header.closeMenu();
+      this.header.closeSecondaryMobile();
+    }
+
+    // Restore the new page's body class (e.g. woocommerce, post-type-archive-product)
+    // so page-specific CSS and WooCommerce layout don't collapse after PJAX.
+    if (to?.page?.body?.className) {
+      document.body.className = to.page.body.className;
+    }
+
+    if (this.lenis) {
+      this.lenis.start();
+      this.lenis.resize();
+    }
+
     ScrollTrigger.refresh();
 
-    /**
-     * Tarte au citron
-     */
+    if (window.location.hash) {
+      const id = window.location.hash.replace('#', '');
+      const target = document.getElementById(id);
 
-    const tarteAuCitron = window.tarteaucitron !== undefined ? window.tarteaucitron : null;
-
-    // Debug
-    /*console.log('Navigation data:', {
-      tarteAuCitron,
-      tarteAuCitron_job: tarteAuCitron?.job,
-      gtagExists: typeof gtag, // undefined if the user does not accept the cookies
-      page_path: this.core.targetLocation.pathname,
-      page_title: to.page.title,
-      page_location: this.core.targetLocation.href
-    })*/
-
-    if (tarteAuCitron && tarteAuCitron.job.includes('gtag') && typeof gtag !== 'undefined') {
-      gtag('config', tarteAuCitron.user.gtagUa, {
-        page_path: this.core.targetLocation.pathname,
-        page_title: to.page.title,
-        page_location: this.core.targetLocation.href,
-      });
+      if (target) {
+        gsap.to(window, {
+          scrollTo: {
+            y: target,
+            offsetY: 150,
+          },
+          duration: 1.2,
+          ease: 'power2.out',
+        });
+      }
     }
   }
 
   onLeave({ from, trigger }) {
     const page = from.renderer.content;
+
+    if (this.header && window.innerWidth < 768) {
+      this.header.closeMenu();
+      this.header.closeSecondaryMobile();
+    }
   }
 }

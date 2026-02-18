@@ -1,60 +1,70 @@
-import { Transition } from '@unseenco/taxi'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-gsap.registerPlugin(ScrollTrigger)
+import { Transition } from '@unseenco/taxi';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default class PageTransitionDefault extends Transition {
-  onEnter({ to, trigger, done }) {
-    const from = to.parentNode.children[0]
+  onEnter({ to, done }) {
+    const parent = to.parentNode;
+    const from = parent.children[0] === to ? parent.children[1] : parent.children[0];
 
-    window.lenis?.stop()
+    window.lenis?.stop();
 
-    gsap.set(to, {
-      position: 'fixed',
-      inset: 0,
-      zIndex: 1000,
-      transformOrigin: 'top center'
-    })
+    // Éviter l'empilement : les deux [data-taxi-view] sont en overlay pendant la transition
+    // (Taxi avec removeOldContent: false ajoute la nouvelle sans retirer l'ancienne)
+    const wrapHeight = from.offsetHeight;
+    gsap.set(parent, { position: 'relative', minHeight: wrapHeight });
+    gsap.set([from, to], {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      width: '100%',
+      opacity: 0,
+    });
 
-    const timeline = gsap.timeline({
-      defaults: { 
-        ease: 'expo.inOut', 
-        duration: 1.5
-      },
+    if (window.location.hash === '') window.scrollTo(0, 0);
+
+    const tl = gsap.timeline({
       onComplete: () => {
-        done()
+        window.scrollTo(0, 0);
 
-        window.scrollTo(0, 0)
-        
-        gsap.set(to, { clearProps: 'all' })
+        from.remove();
+        gsap.set(to, { clearProps: 'all' });
+        gsap.set(parent, { clearProps: 'minHeight,position' });
 
-        from.remove()
+        // Remettre le header en position et opacité normales (animé en onLeave)
+        const header = document.getElementById('header');
+        if (header) gsap.set(header, { clearProps: 'all' });
 
-        document.documentElement.style.cursor = ''
-        document.body.className = ''
+        document.documentElement.style.cursor = '';
+        document.body.className = '';
 
-        window.lenis?.start()
-        window.lenis?.resize()
-      }
-    })
+        window.lenis?.start();
+        window.lenis?.resize();
+        ScrollTrigger.refresh();
 
-    timeline.fromTo(to, {
-      opacity: 0
-    }, {
-      opacity: 1,
-      ease: 'power3.out',
-      duration: 0.5
-    }, 0)   
+        // Ré-init galeries produit WooCommerce (FlexSlider) après navigation Taxi
+        document.dispatchEvent(new CustomEvent('taxi:afterEnter'));
 
-    return timeline
+        done();
+      },
+    });
+
+    tl.to(to, { opacity: 1, ease: 'power3.out', duration: 1.25 }, 0);
+
+    return tl;
   }
 
-  onLeave({ from, trigger, done }) {
-    document.documentElement.style.cursor = 'wait'
-    document.body.className = 'no-events oh'
-    from.classList.add('no-events')
-    from.classList.add('oh')
-    
-    done()
+  onLeave({ from, done }) {
+    document.documentElement.style.cursor = 'wait';
+
+    const tl = gsap.timeline({ onComplete: done });
+
+    tl.to(from, { opacity: 0, duration: 0 }, 0);
+    tl.to('#header', { yPercent: -100, opacity: 0, ease: 'expo.inOut', duration: 1.25 }, 0);
+
+    return tl;
   }
 }
