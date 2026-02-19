@@ -7,6 +7,14 @@
     width: 100%;
     overflow: hidden;
     padding: 6rem var(--gutter);
+
+    @include media('>hd') {
+        padding: 10rem var(--gutter);
+    }
+
+    .events & {
+        padding: 15rem var(--gutter);
+    }
 }
 
 .events-list__container {
@@ -15,6 +23,15 @@
     flex-direction: column;
     gap: 6.4rem;
     margin-top: 3.2rem;
+
+    .events & {
+        margin-top: 0;
+    }
+
+    @include media('>hd') {
+        max-width: 160rem;
+        margin: 0 auto;
+    }
 }
 
 .events-list__header {
@@ -35,6 +52,8 @@
 }
 
 .events-list__list {
-    display: flex;
+    display: grid;
     gap: 1.6rem;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 3.4rem;
 }

@@ -24,17 +24,21 @@
 
 .hero__title {
   width: 60rem;
+
+  @include media('>hd') {
+    width: 100%;
+  }
 }
 
 .hero__content {
   margin-bottom: 6.4rem;
   margin-top: 5rem;
-  display: flex;
-  gap: 3.2rem;
-  justify-content: flex-end;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: self-end;
   width: 100%;
   z-index: 1;
+  gap: 3.2rem;
 }
 
 .hero__media {
@@ -76,6 +80,12 @@
   gap: 0.4rem;
 }
 
+// .hero__events {
+//   @include media('>hd') {
+//     width: 100%;
+//     border: 1px solid red;
+//   }
+// }
 
 .hero__events-title {
   @extend %title-h2;
@@ -109,10 +119,16 @@
 // Line
 #hero-line {
   position: absolute;
-  left: 25rem;
-  bottom: 76rem;
+  left: 33rem;
+  bottom: 84rem;
   z-index: 0;
   width: 96rem;
-  transform: scale(1.5);
+  transform: scale(1.7);
   z-index: 1;
+
+  @include media('>hd') {
+    width: 100%;
+    bottom: 146rem;
+    left: 6rem;
+  }
 }

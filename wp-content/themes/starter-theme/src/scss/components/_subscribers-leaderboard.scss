@@ -1,12 +1,17 @@
 @use '../utils/variables' as *;
 @use '../shared/contents' as *;
 @use '../shared/blur' as *;
+@use '../utils/responsive' as *;
 
 .subscribers-leaderboard {
   width: 42rem;
   @extend %card-blur;
   padding: 3rem 0;
   border-radius: var(--border-radius);
+
+  @include media('>hd') {
+    width: 100%;
+  }
 }
 
 

@@ -1,0 +1,11 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+<div class="events">
+  <div class="events__container">
+    <div class="events__header">
+      {% include 'partials/events-list.twig' with { events: post.all_events } %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -145,7 +145,7 @@ export default class Introduction {
           duration: 5.5,
           ease: 'power1.out',
           clearProps: 'strokeDasharray,strokeDashoffset',
-          opacity: 1,
+          opacity: 0.5,
         },
         'start'
       );
