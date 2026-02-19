@@ -7,28 +7,8 @@
     <div class="home">
         <div class="container">
             {% include 'partials/hero.twig' with { fields: post.hero } %}
-        </div>
 
-        {# Contenu temporaire pour tester le scroll #}
-        <div style="padding: 100px 0; background: #f0f0f0;">
-            <div class="container">
-                <h2>Section 2 - Test Scroll</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-        </div>
-
-        <div style="padding: 100px 0; background: #e0e0e0;">
-            <div class="container">
-                <h2>Section 3 - Test Scroll</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-        </div>
-
-        <div style="padding: 100px 0; background: #d0d0d0;">
-            <div class="container">
-                <h2>Section 4 - Test Scroll</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
+            {% include 'partials/big-img.twig' with { fields: post.transition } %}
         </div>
     </div>
     

@@ -2,93 +2,14 @@
 
 {% block content %}
 <div class="single-event">
-  <div class="container">
+  <div class="single-event__container">
+    {% include 'partials/hero-single.twig' with { image: post.thumbnail, title: post.title } %}
+    
+    {% include 'partials/single-content.twig' %}
 
-  {% if post.thumbnail %}
-  <figure class="single-event__media">
-    <img
-      src="{{ post.thumbnail.src('large') }}"
-      alt="{{ post.thumbnail.alt|default(post.title) }}"
-      loading="lazy"
-    >
-  </figure>
-{% endif %}
+    {% include 'partials/single-sidebar.twig' %}
 
-
-    <header class="single-event__header">
-      <h1 class="single-event__title">{{ post.title }}</h1>
-
-      {# Détails demandés #}
-      {% set schedule = post.getHumanSchedule() %}
-      {% set price = post.getFormattedCost() %}
-      {% set organizer = post.getOrganizerName() %}
-      {% set venue = post.getVenueName() %}
-
-      <div class="single-event__details">
-        {% if schedule %}
-          <p><strong>Date :</strong> {{ schedule }}</p>
-        {% endif %}
-
-        {% if price %}
-          <p><strong>Prix :</strong> {{ price }}</p>
-        {% endif %}
-
-        {% if organizer %}
-          <p><strong>Organisateur :</strong> {{ organizer }}</p>
-        {% endif %}
-
-        {% if venue %}
-          <p><strong>Lieu :</strong> {{ venue }}</p>
-        {% endif %}
-
-        {% if post.hasVenue() %}
-          {% set address = post.getVenueAddress() %}
-          {% set city = post.getVenueCity() %}
-          {% if address or city %}
-            <p class="single-event__address">
-              {{ address }}{% if address and city %}, {% endif %}{{ city }}
-            </p>
-          {% endif %}
-
-          {% set maps = post.getGoogleMapsLink() %}
-          {% if maps %}
-            <p><a href="{{ maps }}" target="_blank" rel="noreferrer noopener">Voir sur Google Maps</a></p>
-          {% endif %}
-        {% endif %}
-      </div>
-    </header>
-
-    <section class="single-event__booking">
-      {% set participants = post.getParticipantsCount() %}
-      {% set remaining = post.getRemainingSpots() %}
-      {% set daysLeft = post.getDaysUntilBookingEnd() %}
-
-      <p><strong>Participants :</strong> {{ participants }}</p>
-
-      {% if remaining > 0 %}
-        <p><strong>Places restantes :</strong> {{ remaining }}</p>
-      {% else %}
-        <p><strong>Places restantes :</strong> —</p>
-      {% endif %}
-
-      {% if daysLeft == -1 %}
-        <p><strong>Fin des réservations :</strong> —</p>
-      {% elseif daysLeft == 0 %}
-        <p><strong>Fin des réservations :</strong> terminée</p>
-      {% else %}
-        <p><strong>Fin des réservations :</strong> dans {{ daysLeft }} jour(s)</p>
-      {% endif %}
-    </section>
-
-    <section class="single-event__content">
-      {{ post.content }}
-    </section>
-
-    {# Bouton/module d’inscription demandé #}
-    <section class="single-event__registration">
-      {{ function('get_template_part', 'views/partials/event-tickets-form', null)|raw }}
-    </section>
-
+    {% include 'partials/single-booking.twig' %}
 
   </div>
 </div>

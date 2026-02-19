@@ -15,6 +15,7 @@ import Medias from '../classes/Medias';
 import Introduction from '../animations/Introduction';
 
 // Layout - Partials
+import Hero from '../partials/Hero';
 
 export default class Taxi {
   constructor({ header, lenis }) {
@@ -73,12 +74,16 @@ export default class Taxi {
         class: Medias,
         params: container => [container, { lenis }],
       },
-      // Partials
-      // mediasSlider: add when MediasSlider class exists and is imported
 
       // Animations
       introduction: {
         class: Introduction,
+        params: container => [container, { lenis }],
+      },
+
+      // Partials
+      hero: {
+        class: Hero,
         params: container => [container, { lenis }],
       },
     };

@@ -1,0 +1,11 @@
+ {% if post.thumbnail %}
+  <div class="single-event__hero">
+    <h1 class="single-event__title">{{ title }}</h1>
+
+    {% include 'components/picture.twig' with {
+      class: 'single-event__img',
+      picture: post.thumbnail,
+      lazyload: true,
+    } only %}
+  </div>
+{% endif %}

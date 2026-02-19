@@ -119,47 +119,47 @@ class Event extends Post
         return $this->toInt(tribe_get_venue_id($this->ID));
     }
 
-    public function getVenueName(): string
+    public function localisation(): string
     {
         return $this->callString('tribe_get_venue', [$this->ID]);
     }
 
-    public function getVenueAddress(): string
+    public function address(): string
     {
         return $this->callString('tribe_get_address', [$this->ID]);
     }
 
-    public function getVenueCity(): string
+    public function city(): string
     {
         return $this->callString('tribe_get_city', [$this->ID]);
     }
 
-    public function getVenueZip(): string
+    public function zip(): string
     {
         return $this->callString('tribe_get_zip', [$this->ID]);
     }
 
-    public function getVenueCountry(): string
+    public function country(): string
     {
         return $this->callString('tribe_get_country', [$this->ID]);
     }
 
-    public function getVenueStateProvince(): string
+    public function province(): string
     {
         return $this->callString('tribe_get_stateprovince', [$this->ID]);
     }
 
-    public function getVenuePhone(): string
+    public function phone(): string
     {
         return $this->callString('tribe_get_phone', [$this->ID]);
     }
 
-    public function getVenueWebsite(): string
+    public function website(): string
     {
         return $this->callString('tribe_get_venue_website_url', [$this->ID]);
     }
 
-    public function getGoogleMapsLink(): string
+    public function maps_link(): string
     {
         return $this->callString('tribe_get_map_link', [$this->ID]);
     }
@@ -178,11 +178,6 @@ class Event extends Post
             return 0;
         }
         return $this->toInt(tribe_get_organizer_id($this->ID));
-    }
-
-    public function getOrganizerName(): string
-    {
-        return $this->callString('tribe_get_organizer', [$this->ID]);
     }
 
     public function getOrganizerPhone(): string
@@ -208,7 +203,7 @@ class Event extends Post
         return $this->callString('tribe_get_cost', [$this->ID]);
     }
 
-    public function getFormattedCost(): string
+    public function formatted_cost(): string
     {
         return $this->callString('tribe_get_formatted_cost', [$this->ID]);
     }
@@ -325,12 +320,12 @@ class Event extends Post
         return [];
     }
 
-    public function hasTickets(): bool
+    public function has_ticket(): bool
     {
         return count($this->ticketsForEvent()) > 0;
     }
 
-    public function getTicketsCount(): int
+    public function tickets_count(): int
     {
         return count($this->ticketsForEvent());
     }
@@ -338,7 +333,7 @@ class Event extends Post
     /**
      * Normalized tickets array for Twig
      */
-    public function getTickets(): array
+    public function ticket(): array
     {
         $tickets = $this->ticketsForEvent();
         if (empty($tickets)) {
@@ -385,7 +380,7 @@ class Event extends Post
      * Attendees / participants count (best effort).
      * Returns 0 if not available.
      */
-    public function getParticipantsCount(): int
+    public function participants_count(): int
     {
         if (function_exists('tribe_tickets_get_event_attendees_count')) {
             return $this->toInt(tribe_tickets_get_event_attendees_count($this->ID));
@@ -435,14 +430,14 @@ class Event extends Post
     /**
      * Remaining spots if capacity is known, else 0.
      */
-    public function getRemainingSpots(): int
+    public function remaining_spots(): int
     {
         $capacity = $this->getTotalCapacity();
         if ($capacity <= 0) {
             return 0;
         }
 
-        return max(0, $capacity - $this->getParticipantsCount());
+        return max(0, $capacity - $this->participants_count());
     }
 
     /**
@@ -450,7 +445,7 @@ class Event extends Post
      * Fallback: booking ends at event start datetime.
      * -1 = unknown, 0 = ended, >0 = days left
      */
-    public function getDaysUntilBookingEnd(): int
+    public function booking_end(): int
     {
         $startIso = $this->getStartDateTimeIso();
         if (!$startIso) {
@@ -547,5 +542,14 @@ class Event extends Post
         }
 
         return $dateStart;
+    }
+
+    public function calendar(): array
+    {
+        return [
+            'start' => $this->getStartDateTimeIso(),
+            'end'   => $this->getEndDateTimeIso(),
+            'schedule' => $this->getHumanSchedule(),
+        ];
     }
 }

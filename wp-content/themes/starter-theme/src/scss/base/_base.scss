@@ -72,19 +72,15 @@ html {
 body {
   font: 400 1.5rem / 1.5 $FranklinGothic;
   letter-spacing: -0.03rem;
-  color: $black;
+  color: $white;
   overscroll-behavior-y: auto;
+  background-color: $black;
 }
 
 #app {
   position: relative;
   z-index: z('app');
   background-color: $black;
-}
-
-[data-taxi-view] {
-  position: relative;
-  z-index: 0;
 }
 
 [data-lazy] {

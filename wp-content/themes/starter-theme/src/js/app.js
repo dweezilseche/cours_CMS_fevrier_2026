@@ -57,7 +57,7 @@ class App {
 
     if (!this.isTouchDevice) {
       this.lenis = new Lenis({
-        duration: 0.82,
+        duration: 1.1,
         easing: t => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
         smoothWheel: true,
         smoothTouch: false,

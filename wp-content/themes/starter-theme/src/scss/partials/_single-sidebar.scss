@@ -1,0 +1,8 @@
+@use '../utils/variables' as *;
+
+.single-event__sidebar {
+  grid-column: span 4;
+  margin-right: var(--gutter);
+  transform: translateY(-22rem);
+  z-index: 3;
+}

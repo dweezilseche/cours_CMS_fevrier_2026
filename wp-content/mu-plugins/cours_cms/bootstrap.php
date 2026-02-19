@@ -33,6 +33,5 @@
             \App\ClassMapper::class,
             \App\Acf\AcfBlocks::class,
             \App\Acf\AcfContext::class,
-            \App\Controllers\PlayerController::class,
         ]);
     }, 10);

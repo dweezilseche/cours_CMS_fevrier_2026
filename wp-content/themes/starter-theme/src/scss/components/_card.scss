@@ -8,8 +8,8 @@
   color: $white;
   display: grid;
   align-items: center;
-  gap: 1.6rem;
-  grid-template-columns: 8rem 1fr 4.6rem;
+  gap: 1.2rem;
+  grid-template-columns: 4.6rem 1fr 4.6rem;
   width: 42rem;
   height: 5.3rem;
   position: relative;
@@ -17,18 +17,44 @@
   padding: 0.4rem 1.1rem 0.4rem 2.4rem;
   overflow: visible;
   clip-path: polygon(3.8% 0%, 96.2% 0%, 100% 50%, 96.2% 100%, 3.8% 100%, 0% 50%);
-  transition: transform 500ms $ease-out-quart;
-
+  transition: transform 850ms $ease-out-quart, background 500ms $ease-out-quart;
   @extend %text-card;
   @extend %card-blur;
 
+  .hero__events-item & {
+    grid-template-columns: 4rem 1fr 4.6rem;
+  }
+
   &:hover {
     transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.15);
   }
 }
 
 .card__category {
   opacity: 0.40;
+  @extend %text-small;
+  transition: opacity 850ms $ease-out-quart;
+
+  .card:hover & {
+    opacity: 1;
+  }
+
+  .hero__events-item & {
+    opacity: 1;
+  }
+}
+
+.card__title {
+  transition: opacity 850ms $ease-out-quart;
+
+  .hero__events-item & {
+    opacity: 0.40;
+  }
+
+  .card:hover & {
+    opacity: 1;
+  }
 }
 
 .card__polygon-container {

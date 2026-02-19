@@ -66,7 +66,7 @@ export default class Medias {
         plyr.on('ready', _ => {
           plyr.muted = true;
           plyr.loop = true;
-          // plyr.play();
+          plyr.play();
         });
       } else {
         // Add cursor animations

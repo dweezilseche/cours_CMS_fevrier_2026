@@ -1,0 +1,30 @@
+@use '../utils/variables' as *;
+@use '../shared/blur' as *;
+
+
+.single-event__container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 1fr auto;
+}
+
+.tribe-tickets__rsvp-wrapper {
+    backdrop-filter: blur(1.1rem) !important;
+    background: rgba(126, 126, 126, 0.10) !important;
+    color: $white !important;
+    border: none !important;
+}
+
+.tribe-tickets__rsvp {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.tribe-tickets__rsvp-details {
+    width: 100% !important;
+    border: 1px solid red !important;
+
+    >* {
+        color: $white !important;
+    }
+}

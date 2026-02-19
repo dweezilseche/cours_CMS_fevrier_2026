@@ -1,0 +1,23 @@
+<section class="single-event__booking">
+  <div class="single-event__booking-container">
+    {% set participants = post.participants_count %}
+    {% set remaining = post.remaining_spots %}
+    {% set daysLeft = post.booking_end %}
+
+    <p><strong>Participants :</strong> {{ participants }}</p>
+
+    {% if remaining > 0 %}
+      <p><strong>Places restantes :</strong> {{ remaining }}</p>
+    {% else %}
+      <p><strong>Places restantes :</strong> —</p>
+    {% endif %}
+
+    {% if daysLeft == -1 %}
+      <p><strong>Fin des réservations :</strong> —</p>
+    {% elseif daysLeft == 0 %}
+      <p><strong>Fin des réservations :</strong> terminée</p>
+    {% else %}
+      <p><strong>Fin des réservations :</strong> dans {{ daysLeft }} jour(s)</p>
+    {% endif %}
+  </div>
+</section>

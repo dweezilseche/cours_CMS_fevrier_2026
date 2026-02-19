@@ -1,0 +1,31 @@
+{% set schedule = post.calendar %}
+{% set price = post.formatted_cost %}
+{% set localisation = post.localisation %}
+
+<section class="single-event__details">
+  <div class="single-event__details-container">
+    <div class="single-event__table">
+      {% if schedule %}
+        <p><strong>Date :</strong> {{ schedule.start|date('d F Y') }}{% if schedule.end and schedule.end != schedule.start %} - {{ schedule.end|date('d F Y') }}{% endif %}</p>
+      {% endif %}
+
+      {% if price %}
+        <p><strong>Prix :</strong> {{ price }}</p>
+      {% endif %}
+
+      {% if localisation %}
+        <p><strong>Lieu :</strong> {{ localisation }}</p>
+      {% endif %}
+
+      {% if post.hasVenue() %}
+        {% set address = post.address %}
+        {% set city = post.city %}
+        {% if address or city %}
+          <p class="single-event__address">
+            {{ address }}{% if address and city %}, {% endif %}{{ city }}
+          </p>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</section>

@@ -1,36 +1,46 @@
 {% set media = fields.media %}
 {% set title = fields.title %}
+{% set subtitle = fields.subtitle %}
+{% set month_map = {
+  'janvier':'01','février':'02','mars':'03','avril':'04','mai':'05','juin':'06',
+  'juillet':'07','août':'08','septembre':'09','octobre':'10','novembre':'11','décembre':'12'
+} %}
 
-<div class="hero">
+<div class="hero" id="hero">
   <div class="hero__container">
     <h1 class="hero__title">{{ title }}</h1>
+
+    <svg id="hero-line" viewBox="0 0 1868 1527" fill="none" data-line-animation>
+      <path d="M0 1525.52H987.545L1866.69 0.249634" stroke="white"/>
+    </svg>
 
     <div class="hero__content">
       <div class="hero__events">
         <h2 class="hero__events-title">Prochains évènements</h2>
-        {% if latest_posts|length > 0 %}
-          <ul class="hero__news-list">
-            {% for post in latest_posts %}
-              <li class="hero__news-item">
+        {% if post.upcoming_events|length > 0 %}
+          <ul class="hero__events-list" data-list-animation>
+            {% for event in post.upcoming_events %}
+            {% set parts = event.date|lower|split(' ') %}
+              <li class="hero__events-item">
                 {% include 'components/card.twig' with {
-                  link: post.link,
-                  class: 'hero__news-link',
-                  category: post.category,
-                  title: post.title,
+                  link: event.link,
+                  class: 'hero__events-link',
+                  category: (parts[0]|length == 1 ? '0' ~ parts[0] : parts[0]) ~ '.' ~ month_map[parts[1]],
+                  title: event.title,
                 } only %}
               </li>
             {% endfor %}
           </ul>
         {% else %}
-          <p class="hero__no-news">Aucune actualité pour le moment.</p>
+          <p class="hero__no-news">Aucun évènement pour le moment.</p>
         {% endif %}
       </div>
 
       <div class="hero__news">
         <h2 class="hero__news-title">Dernières actualités</h2>
         {% if latest_posts|length > 0 %}
-          <ul class="hero__news-list">
-            {% for post in latest_posts %}
+          <ul class="hero__news-list" data-list-animation>
+            {% for post in latest_posts|slice(0, 3) %}
               <li class="hero__news-item">
                 {% include 'components/card.twig' with {
                   link: post.link,
@@ -50,6 +60,10 @@
           subscribers: subscribers,
           limit: 10 
       } %}
+    </div>
+
+    <div class="hero__subtitle">
+      <p class="hero__subtitle-text">{{ subtitle }}</p>
     </div>
 
     {% if media %}
