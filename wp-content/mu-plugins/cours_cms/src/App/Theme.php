@@ -223,7 +223,7 @@ class Theme extends WknTheme
         $context['subscribers'] = self::getSubscribersWithInfos();
         
         // Ajouter les derniers articles
-        $context['latest_posts'] = self::getLatestPosts(5);
+        // $context['latest_posts'] = self::getLatestPosts();
         
         return $context;
     }

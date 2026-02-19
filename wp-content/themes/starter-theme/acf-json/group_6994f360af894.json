@@ -361,6 +361,76 @@
                     "preview_size": "medium"
                 }
             ]
+        },
+        {
+            "key": "field_699754bf279ac",
+            "label": "Prochains évènements",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_699754d8279ad",
+            "label": "",
+            "name": "events",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_699754e8279ae",
+                    "label": "Évènements sélectionnés",
+                    "name": "selected_events",
+                    "aria-label": "",
+                    "type": "relationship",
+                    "instructions": "Pas activé pour le moment, je préfère afficher automatiquement les plus récents",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "tribe_events"
+                    ],
+                    "post_status": [
+                        "publish"
+                    ],
+                    "taxonomy": "",
+                    "filters": [
+                        "search",
+                        "post_type",
+                        "taxonomy"
+                    ],
+                    "return_format": "id",
+                    "min": "",
+                    "max": "",
+                    "allow_in_bindings": 0,
+                    "elements": "",
+                    "bidirectional": 0,
+                    "bidirectional_target": []
+                }
+            ]
         }
     ],
     "location": [
@@ -382,5 +452,5 @@
     "description": "",
     "show_in_rest": 0,
     "display_title": "",
-    "modified": 1771452565
+    "modified": 1771525470
 }

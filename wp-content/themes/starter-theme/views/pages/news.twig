@@ -1,0 +1,34 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+<div class="news">
+  <div class="news__container">
+    <div class="events-list__header">
+        <svg class="events-list__icon">
+            <use href="#polygon"></use>
+        </svg>
+      <h2 class="events-list__title">Récemment publiés</h2>
+    </div>
+
+    <div class="news__content">
+      {% if post.latest_posts|length > 0 %}
+        <div class="news__list" data-list-animation>
+          {% for article in post.latest_posts %}
+              {% include 'components/event-card.twig' with {
+                event: {
+                    link: article.link,
+                    title: article.title,
+                    date: article.getFormattedDate(),
+                    excerpt: article.excerpt,
+                    thumbnail: article.thumbnail,
+                    titlebutton: 'Lire l\'article'
+                }
+              } only %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="news__no-news">Aucune actualité pour le moment.</p>
+      {% endif %}
+  </div>
+</div>
+{% endblock %}

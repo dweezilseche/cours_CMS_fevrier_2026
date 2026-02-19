@@ -5,7 +5,7 @@
                 {% include 'components/picture.twig' with { 
                     picture: event.thumbnail, 
                     class: 'event-card__img',
-                    } %}
+                } %}
             {% endif %}
         </div>
 
@@ -22,7 +22,7 @@
     {% include 'components/button.twig' with {
         link: event.link,
         class: 'event-card__button is-normal is-white',
-        title: 'En savoir plus',
+        title: event.titlebutton|default('En savoir plus'),
         icon: 'arrow-right',
         htmlTag: 'a',
     } only %}

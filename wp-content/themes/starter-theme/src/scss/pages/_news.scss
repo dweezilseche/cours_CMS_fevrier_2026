@@ -1,0 +1,16 @@
+@use '../utils/variables' as *;
+@use '../utils/responsive' as *;
+@use '../shared/titles' as *;
+@use '../shared/contents' as *;
+
+.news {
+  padding: 15rem var(--gutter) 10rem;
+}
+
+
+.news__list {
+  display: grid;
+  gap: 1.6rem;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 3.4rem;
+}

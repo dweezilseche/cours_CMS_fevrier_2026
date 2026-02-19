@@ -41,4 +41,29 @@ class FrontPage extends Page
     {
         return $this->getUpcomingEvents(3);
     }
+
+    /**
+     * Récupère les derniers articles publiés
+     */
+    public function getLatestPosts(int $limit = 3): array
+    {
+        $args = [
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'posts_per_page' => $limit,
+            'orderby' => 'date',
+            'order' => 'DESC',
+        ];
+        
+        $posts = Timber::get_posts($args);
+        return is_array($posts) ? $posts : (method_exists($posts, 'to_array') ? $posts->to_array() : iterator_to_array($posts));
+    }
+
+    /**
+     * Expose les derniers articles directement dans le contexte Twig
+     */
+    public function latest_posts(): array
+    {
+        return $this->getLatestPosts(3);
+    }
 }

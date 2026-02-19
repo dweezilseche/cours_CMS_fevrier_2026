@@ -38,9 +38,9 @@
 
       <div class="hero__news">
         <h2 class="hero__news-title">Dernières actualités</h2>
-        {% if latest_posts|length > 0 %}
+        {% if post.latest_posts|length > 0 %}
           <ul class="hero__news-list" data-list-animation>
-            {% for post in latest_posts|slice(0, 3) %}
+            {% for post in post.latest_posts|slice(0, 3) %}
               <li class="hero__news-item">
                 {% include 'components/card.twig' with {
                   link: post.link,

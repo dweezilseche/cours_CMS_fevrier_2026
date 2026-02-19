@@ -6,7 +6,7 @@
     
     <div class="home">
         <div class="container">
-            {% include 'partials/hero.twig' with { fields: post.hero } %}
+            {% include 'partials/hero.twig' with { fields: post.hero, post: post } %}
 
             {% include 'partials/big-img.twig' with { fields: post.transition } %}
 
