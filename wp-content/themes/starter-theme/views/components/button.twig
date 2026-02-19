@@ -20,6 +20,7 @@
   {% if button.disabled %} disabled{% endif %}
   {# {% if button.target %}target="_blank" rel="noreferrer noopener"{% endif %} #}
   {% if button.formId %} data-hubspot-form-id="{{ button.formId }}"{% endif %}
+  {% if dataAttributes %}{% for attr, value in dataAttributes %} data-{{ attr }}="{{ value }}"{% endfor %}{% endif %}
   {% if ignore %}data-taxi-ignore{% endif %}
   {% if download %}data-taxi-ignore download{% endif %}
   {% if anchor %}data-anchor data-taxi-ignore{% endif %}

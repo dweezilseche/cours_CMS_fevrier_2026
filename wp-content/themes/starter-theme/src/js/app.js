@@ -21,6 +21,7 @@ import { scrollToAnchor } from './utils/scrollToAnchor';
 import Preloader from './layouts/Preloader';
 import Header from './layouts/Header';
 import Footer from './layouts/Footer';
+import LoginModal from './components/LoginModal';
 
 class App {
   constructor() {
@@ -39,6 +40,7 @@ class App {
       this.createLenis();
       this.createHeader();
       this.createFooter();
+      this.createLoginModal();
       this.setTaxi();
       scrollToAnchor(this.lenis, 100);
 
@@ -111,6 +113,10 @@ class App {
 
   createFooter() {
     this.footer = new Footer();
+  }
+
+  createLoginModal() {
+    this.loginModal = new LoginModal();
   }
 
   /**

@@ -57,6 +57,10 @@
   margin-top: auto;
   margin-left: auto;
   width: 16.5rem;
+
+  .news & {
+    width: 15.3rem;
+  }
 }
 
 .event-card__excerpt {

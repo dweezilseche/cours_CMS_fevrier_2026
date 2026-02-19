@@ -160,3 +160,51 @@ class StarterTheme {
 
 // Instancier le thème
 new StarterTheme();
+
+/**
+ * Détection de connexion réussie dans l'iframe de la modal
+ * Envoie un message postMessage à la fenêtre parente
+ */
+add_action('login_footer', function() {
+    ?>
+    <script>
+    (function() {
+        // Vérifier si on est dans une iframe
+        if (window.self !== window.top) {
+            // Surveiller les redirections après connexion
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Si on détecte une redirection ou un message de succès
+            if (urlParams.get('loggedout') === 'true' || 
+                urlParams.get('registration') === 'complete' ||
+                document.querySelector('.message.success')) {
+                
+                // Ne pas notifier sur la déconnexion
+                if (urlParams.get('loggedout') !== 'true') {
+                    window.parent.postMessage({ type: 'wp-login-success' }, '*');
+                }
+            }
+            
+            // Surveiller les soumissions de formulaire
+            const loginForm = document.getElementById('loginform');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function() {
+                    // Après soumission, surveiller si on est redirigé
+                    setTimeout(function checkLogin() {
+                        // Si la page a changé et qu'il n'y a pas d'erreur
+                        if (!document.querySelector('.login-error') && 
+                            !document.querySelector('#login_error')) {
+                            
+                            // Si on n'est plus sur wp-login.php, la connexion a réussi
+                            if (!window.location.href.includes('wp-login.php')) {
+                                window.parent.postMessage({ type: 'wp-login-success' }, '*');
+                            }
+                        }
+                    }, 500);
+                });
+            }
+        }
+    })();
+    </script>
+    <?php
+});

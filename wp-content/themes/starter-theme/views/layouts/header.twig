@@ -26,7 +26,7 @@
       </nav>
     {% endif %}
 
-    {# Bouton de connexion (lien, pas bouton) pour que le clic ouvre wp-login.php #}
+    {# Bouton de connexion/déconnexion #}
     <div class="header__login">
 
       {% if fn('is_user_logged_in') %}
@@ -43,15 +43,28 @@
 
       {% else %}
 
-        {% include 'components/button.twig' with {
-          button: {
-            title: 'Se connecter',
-            url: fn('wp_login_url', post.link),
-          },
-          icon: 'arrow-right',
-          class: 'is-normal is-white',
-          ignore: true,
-        } only %}
+        {# Bouton de connexion modal (button au lieu de lien pour éviter la navigation) #}
+        <button
+          type="button"
+          class="button is-normal is-white"
+          data-login-modal-open
+          data-login-url="{{ fn('wp_login_url', post.link) }}"
+          aria-label="Se connecter"
+        >
+          <span>Se connecter</span>
+          <div class="button__polygon-container">
+            <div class="button__icon-wrapper">
+              {% for i in 1..2 %}
+                <svg class="button__icon">
+                  <use href="#arrow-right"></use>
+                </svg>
+              {% endfor %}
+            </div>
+            <svg class="polygon">
+              <use href="#polygon"></use>
+            </svg>
+          </div>
+        </button>
 
       {% endif %}
 
@@ -61,3 +74,6 @@
       
   </div>
 </header>
+
+{# Modal de connexion #}
+{% include 'components/modal-login.twig' %}
