@@ -6,14 +6,15 @@
 .events-list {
     width: 100%;
     overflow: hidden;
+    padding: 6rem var(--gutter);
 }
 
 .events-list__container {
-    padding: 8rem var(--gutter);
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 6.4rem;
+    margin-top: 3.2rem;
 }
 
 .events-list__header {

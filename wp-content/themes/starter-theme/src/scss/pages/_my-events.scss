@@ -3,7 +3,7 @@
 @use '../shared/titles' as *;
 
 .my-events {
-  padding: 10rem var(--gutter) 10rem;
+  padding: 15rem var(--gutter) 10rem;
 }
 
 .my-events__container {
@@ -23,10 +23,19 @@
 .my-events__empty {
   padding: 2rem 0;
   color: $white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4rem;
 
   p {
     margin-bottom: 1.2rem;
   }
+}
+.my-events__login-button{
+  width: 16.5rem;
+  margin-top: 1.6rem;
 }
 
 .my-events__notice {
@@ -50,32 +59,16 @@
 }
 
 .my-events__cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
 }
 
 .my-events__card-wrapper {
-  flex: 1 1 100%;
-  max-width: 100%;
-
-  @include media('>=tablet') {
-    flex: 1 1 calc(50% - 1rem);
-    max-width: calc(50% - 1rem);
-  }
+  width: 100%;
 }
 
 .my-events__unregister {
   margin-top: 0.8rem;
   margin-bottom: 0;
-}
-
-.my-events__unregister-link {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: underline;
-
-  &:hover {
-    color: $white;
-  }
 }

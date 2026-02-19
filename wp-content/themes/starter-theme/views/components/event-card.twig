@@ -26,4 +26,16 @@
         icon: 'arrow-right',
         htmlTag: 'a',
     } only %}
+
+    {% set event_id = event.ID ?? event.id %}
+    {% if unregister_urls[event_id] is defined %}
+        {% include 'components/link.twig' with {
+        link: {
+            url: unregister_urls[event_id],
+            title: 'Se désinscrire',
+        },
+        class: 'my-events__unregister-link',
+        router_disabled: true
+        } only %}
+    {% endif %}
 </article>

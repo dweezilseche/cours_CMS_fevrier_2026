@@ -3,16 +3,26 @@
 {% block content %}
 <div class="my-events">
   <div class="my-events__container container">
-    <header class="my-events__header">
-      <h1 class="my-events__title">Mes événements</h1>
-    </header>
+    <div class="events-list__header">
+        <svg class="events-list__icon">
+            <use href="#polygon"></use>
+        </svg>
+      <h1 class="events-list__title">Mes évènements</h2>
+    </div>
 
     {% if my_events_logged_out %}
       <div class="my-events__login-required">
         <p>Connectez-vous pour voir les événements auxquels vous êtes inscrit.</p>
-        <a href="{{ site.url }}/wp-login.php?redirect_to={{ fn('urlencode', post.link) }}" class="button is-normal is-white" data-taxi-ignore>
-          Se connecter
-        </a>
+
+        {% include 'components/button.twig' with {
+          button: {
+            title: 'Se connecter',
+            url: site.url ~ '/wp-login.php?redirect_to=' ~ fn('urlencode', post.link),
+          },
+          class: 'my-events__login-button is-normal is-white',
+          icon: 'arrow-right',
+          ignore: true,
+        } only %}
       </div>
     {% elseif not events or events|length == 0 %}
       <div class="my-events__empty">
@@ -34,15 +44,7 @@
           <div class="events-list__list my-events__cards">
             {% for event in events %}
               <div class="my-events__card-wrapper">
-                {% include 'components/event-card.twig' with { event: event } only %}
-                {% if unregister_urls[event.id] is defined %}
-                  <p class="my-events__unregister">
-                    <a href="{{ unregister_urls[event.id] }}" class="my-events__unregister-link" data-taxi-ignore
-                       onclick="return confirm('Êtes-vous sûr de vouloir vous désinscrire de cet événement ?');">
-                      Se désinscrire
-                    </a>
-                  </p>
-                {% endif %}
+                {% include 'components/event-card.twig' with { event: event, unregister_urls: unregister_urls } only %}
               </div>
             {% endfor %}
           </div>
