@@ -1,0 +1,15 @@
+<section class="events-list">
+  <div class="events-list__container">
+    <div class="events-list__header">
+        <svg class="events-list__icon">
+            <use href="#polygon"></use>
+        </svg>
+      <h2 class="events-list__title">Prochains évènements</h2>
+    </div>
+    <div class="events-list__list">
+      {% for event in events %}
+        {% include 'components/event-card.twig' with { event: event } only %}
+      {% endfor %}
+    </div>
+  </div>
+</section>

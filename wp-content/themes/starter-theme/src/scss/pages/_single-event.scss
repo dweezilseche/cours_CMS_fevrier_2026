@@ -1,5 +1,7 @@
 @use '../utils/variables' as *;
 @use '../shared/blur' as *;
+@use '../shared/contents' as *;
+@use '../shared/forms' as *;
 
 
 .single-event__container {
@@ -8,23 +10,180 @@
     grid-template-rows: 1fr auto;
 }
 
-.tribe-tickets__rsvp-wrapper {
-    backdrop-filter: blur(1.1rem) !important;
-    background: rgba(126, 126, 126, 0.10) !important;
-    color: $white !important;
-    border: none !important;
-}
+.single-registration {
 
-.tribe-tickets__rsvp {
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-.tribe-tickets__rsvp-details {
-    width: 100% !important;
-    border: 1px solid red !important;
-
-    >* {
-        color: $white !important;
+    .tribe-tickets__rsvp-wrapper {
+      @extend %card-blur;
+      color: $white;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 4rem 3.2rem;
+      overflow: hidden;
     }
-}
+  
+    .tribe-tickets__rsvp {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+  
+    .tribe-tickets__rsvp-details-wrapper,
+    .tribe-tickets__rsvp-actions-wrapper {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      border: none;
+    }
+
+    .tribe-common-g-col{
+        margin: 0!important;
+        padding: 0!important;
+    }
+
+    .tribe-tickets__rsvp-availability{
+        margin-top: 2rem;
+    }
+  
+    .tribe-tickets__rsvp-details {
+      .tribe-tickets__rsvp-title,
+      .tribe-tickets__rsvp-attendance span,
+      .tribe-tickets__rsvp-availability, 
+      .tribe-tickets__rsvp-availability span {
+        color: $white;
+      }
+  
+      .tribe-tickets__rsvp-description {
+        display: none;
+      }
+    }
+
+    .tribe-tickets__rsvp-availability-quantity,
+    .tribe-tickets__rsvp-availability-days-left,
+    .tribe-tickets__rsvp-attendance-number, 
+    .tribe-tickets__rsvp-attendance-number--no-description {
+        font: 500 2rem / 1 $FranklinGothic !important;
+    }
+
+    .tribe-tickets__rsvp-availability-days-to-rsvp{
+        margin-top: 2rem;
+    }
+
+    .tribe-tickets__rsvp-actions-rsvp{
+        margin-top: 2rem;
+        .tribe-common-h2{
+            display: none;
+        }
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    // Styles for the RSVP form
+    .tribe-tickets__rsvp-form-wrapper{
+        padding: 0;
+    }
+
+    .tribe-tickets__rsvp-form-title h3{
+        color: $white;
+        font: 500 1.8rem / 1.1 $FranklinGothic;
+    }
+
+    .tribe-tickets__form-field-label{
+        color: $white!important;
+       display: flex!important;
+       opacity: 0.6;
+    }
+
+    .tribe-tickets__form-field-label{
+        font-size: 1.4rem!important;
+    }
+
+    .submit-button {
+        padding-right: 1.6rem;;
+    }
+
+    .tribe-tickets__rsvp-form-button--cancel{
+        transition: color 500ms $ease;
+        &:hover {
+            color: $white;
+        }
+    }
+
+    input[type="text"],
+    input[type="email"]{
+        @extend %input-text;
+        color: $white;
+    }
+
+    input[type="number"]{
+        @extend %input-number;
+        color: $white;
+    }
+
+    textarea{
+        @extend %text-area;
+        color: $white;
+    }
+
+    // Confirmation
+    .tribe-tickets__rsvp-message{
+        @extend %text-card;
+        color: $white;
+        background: rgba($white, 0.1);
+        margin-bottom: 1.6rem;
+        letter-spacing: -0.03em;
+    }
+
+    .tribe-tickets-svgicon{
+        display: none;
+    }
+
+    .tribe-tickets__rsvp-actions-success{
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .tribe-tickets__rsvp-actions-success-going-check-icon{
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+
+    .tribe-tickets__rsvp-actions-success-going span{
+        color: $white;
+        font: 500 1.4rem / 1.1 $FranklinGothic;
+        letter-spacing: -0.02em;
+    }
+
+    .tec-tickets__attendees-list-wrapper {
+        display: none;
+    }
+
+    .tec-tickets__attendees-list-wrapper h4 {
+        color: $white;
+        margin-top: 2rem;
+    }
+
+    .tec-tickets__attendees-list{
+        background: none;
+        padding: 0;
+        border: none;
+    }
+
+    .tec-tickets__attendees-list-item{
+        border: none;
+        padding: 0;
+        padding-bottom: 1.6rem;
+        border-bottom: 0.1rem solid rgba($white, 0.3)!important;
+    }
+
+    .tec-tickets__attendees-list-item-attendee-details{
+        color: $white;
+        font: 500 1.5rem / 1.4 $FranklinGothic;
+    }
+  }
+  

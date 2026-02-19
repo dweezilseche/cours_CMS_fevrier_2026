@@ -27,7 +27,7 @@
 .single-event__title {
   @extend %title-h1;
   position: absolute;
-  bottom: 5rem;
+  bottom: 3rem;
   left: var(--gutter);
   z-index: 2;
   max-width: 71rem;

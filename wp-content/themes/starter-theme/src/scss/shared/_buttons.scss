@@ -3,7 +3,7 @@
 
 $buttons-themes: // Slug        // Background     // Color
 
-  'white' rgba(255, 255, 255, 0.20) $white,
+  'white' rgba(255, 255, 255, 0.10) $white,
   'black' rgba(0, 0, 0, 0) $black,
   'beige'$beige $black,
   'full-black'$black $white,
@@ -16,7 +16,7 @@ $buttons-themes: // Slug        // Background     // Color
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
-  transition: transform 500ms $ease;
+  transition: transform 500ms $ease, background 500ms $ease;
   color: $white;
   font: 500 1.4rem / 1 $FranklinGothic;
   // background: rgba(0, 0, 0, 0.20);
@@ -159,10 +159,10 @@ $buttons-themes: // Slug        // Background     // Color
       color: $color;
       border-color: rgba($color, 0.3);
 
-      &::before,
-      &::after {
-        background: $background;
+      &:hover {
+        background: rgba($background, 0.2);
       }
+
     }
   }
 }

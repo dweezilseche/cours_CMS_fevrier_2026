@@ -1,0 +1,21 @@
+@use '../shared/contents' as *;
+@use '../utils/variables' as *;
+@use '../shared/titles' as *;
+@use '../shared/blur' as *;
+
+.single-event__details {
+  @extend %text-card;
+  @extend %card-blur;
+  color: $white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 4rem 3.2rem;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+.single-event__table{
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}

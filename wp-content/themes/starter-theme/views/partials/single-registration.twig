@@ -1,50 +1,5 @@
-  {#
-/**
- * Block: RSVP - Affichage via le système natif
- * Utilise le template surchargé tribe/tickets/v2/rsvp.php
- *
- * @var int post_id L'ID du post
- * @var bool has_rsvps Vrai s'il y a des RSVPs
- * @var string rsvp_html Le HTML du formulaire RSVP
- * @var array rsvps Les données RSVP
- */
-#}
-
-
-{% if has_rsvps %}
-<section class="single-event__registration">
-  <div class="single-event__registration-container">
-    {# Debug : vérifier si les données sont présentes #}
-    {% if rsvp_html %}
-      {# Afficher le HTML du formulaire RSVP capturé en PHP #}
-      {{ rsvp_html|raw }}
-    {% else %}
-      {# Fallback : afficher les données brutes pour déboguer #}
-      <div>
-        <p><strong>Données RSVP disponibles :</strong></p>
-        {% for rsvp in rsvps %}
-          <div>
-            <p><strong>Nom :</strong> {{ rsvp.name }}</p>
-            <p><strong>Participants :</strong> {{ rsvp.qty_sold }}</p>
-            <p><strong>Places restantes :</strong> 
-              {% if rsvp.remaining == -1 %}
-                Illimité
-              {% else %}
-                {{ rsvp.remaining }}
-              {% endif %}
-            </p>
-            <p><strong>Jours restants :</strong> {{ rsvp.days_remaining }}</p>
-            <p><strong>Disponible :</strong> {{ rsvp.is_in_stock ? 'Oui' : 'Non' }}</p>
-            <p><strong>Dans la période :</strong> {{ rsvp.in_date_range ? 'Oui' : 'Non' }}</p>
-          </div>
-        {% endfor %}
-        <p style="color: red;"><em>Le formulaire RSVP ne s'affiche pas. Vérifiez les templates surchargés.</em></p>
-      </div>
-    {% endif %}
-  </div>
-</section>
-{% else %}
-  <div>
-    <p>Aucun RSVP configuré pour cet événement.</p>
-  </div>
+<div class="single-registration">
+  {% if tickets_html %}
+    {{ tickets_html|raw }}
 {% endif %}
+</div>

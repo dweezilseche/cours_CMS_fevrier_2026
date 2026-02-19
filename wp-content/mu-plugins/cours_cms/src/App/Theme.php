@@ -444,46 +444,91 @@ class Theme extends WknTheme
         if ($is_user_attendee) {
             // Supprimer l'attendee
             $deleted = wp_delete_post($attendee_id, true);
-            
+
+            $redirect_to = isset($_GET['redirect_to']) ? esc_url_raw(wp_unslash($_GET['redirect_to'])) : '';
+            $same_site   = $redirect_to && (strpos($redirect_to, home_url()) === 0);
+            $redirect_url = ($redirect_to && $same_site)
+                ? add_query_arg(['message' => 'unregistered', 'nocache' => time()], $redirect_to)
+                : add_query_arg(['page' => 'my-events', 'message' => 'unregistered', 'nocache' => time()], admin_url('admin.php'));
+
             if ($deleted && $found_event_id) {
-                // Vider tous les caches possibles pour cet événement
                 wp_cache_delete($found_event_id, 'tribe_attendees');
                 wp_cache_delete('attendees_' . $found_event_id, 'tribe_events');
                 delete_transient('tribe_attendees_' . $found_event_id);
-                
-                // Déclencher l'action de suppression d'attendee
                 do_action('event_tickets_after_delete_ticket', $attendee_id, $found_event_id);
-                
-                wp_redirect(add_query_arg([
-                    'page' => 'my-events',
-                    'message' => 'unregistered',
-                    'nocache' => time() // Forcer le rechargement
-                ], admin_url('admin.php')));
-                exit;
-            } elseif ($deleted) {
-                wp_redirect(add_query_arg([
-                    'page' => 'my-events',
-                    'message' => 'unregistered',
-                    'nocache' => time()
-                ], admin_url('admin.php')));
-                exit;
-            } else {
-                wp_redirect(add_query_arg([
-                    'page' => 'my-events',
-                    'message' => 'error'
-                ], admin_url('admin.php')));
+                wp_redirect($redirect_url);
                 exit;
             }
-        } else {
-            wp_die(__('Vous ne pouvez pas vous désinscrire de cet événement. ID: ' . $attendee_id, 'app'));
+            if ($deleted) {
+                wp_redirect($redirect_url);
+                exit;
+            }
+            wp_redirect(($redirect_to && $same_site)
+                ? add_query_arg(['message' => 'error'], $redirect_to)
+                : add_query_arg(['page' => 'my-events', 'message' => 'error'], admin_url('admin.php')));
+            exit;
         }
-        
-        // Si on arrive ici, c'est qu'il y a eu un problème
-        wp_redirect(add_query_arg([
-            'page' => 'my-events',
-            'message' => 'error'
-        ], admin_url('admin.php')));
-        exit;
+        wp_die(__('Vous ne pouvez pas vous désinscrire de cet événement. ID: ' . $attendee_id, 'app'));
+    }
+
+    /**
+     * Récupère les événements auxquels l'utilisateur connecté est inscrit (RSVP / billet).
+     * Utilisé par la page admin "Mes évènements" et par le template front page-my-events.
+     *
+     * @return array Liste d'entrées [ 'event_id' => int, 'event_title' => string, 'event_url' => string, 'ticket_name' => string, 'order_status' => string, 'attendee_id' => string|int ]
+     */
+    public static function get_current_user_events_data(): array
+    {
+        $current_user_id = get_current_user_id();
+        if ( ! $current_user_id) {
+            return [];
+        }
+        $user_email = wp_get_current_user()->user_email;
+        $user_events = [];
+
+        if ( ! function_exists('tribe_tickets_get_attendees')) {
+            return $user_events;
+        }
+
+        $events_query = new \WP_Query([
+            'post_type'      => 'tribe_events',
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+        ]);
+
+        if ( ! $events_query->have_posts()) {
+            return $user_events;
+        }
+
+        while ($events_query->have_posts()) {
+            $events_query->the_post();
+            $event_id = get_the_ID();
+            $attendees = tribe_tickets_get_attendees($event_id);
+
+            if (empty($attendees)) {
+                continue;
+            }
+
+            foreach ($attendees as $attendee) {
+                $attendee_user_id = isset($attendee['user_id']) ? (int) $attendee['user_id'] : 0;
+                $attendee_email   = isset($attendee['purchaser_email']) ? $attendee['purchaser_email'] : '';
+
+                if ($attendee_user_id === $current_user_id || $attendee_email === $user_email) {
+                    $user_events[] = [
+                        'event_id'     => $event_id,
+                        'event_title'  => get_the_title($event_id),
+                        'event_url'    => get_permalink($event_id),
+                        'ticket_name'  => isset($attendee['product_name']) ? $attendee['product_name'] : '',
+                        'order_status' => isset($attendee['order_status']) ? $attendee['order_status'] : '',
+                        'attendee_id'  => isset($attendee['attendee_id']) ? $attendee['attendee_id'] : '',
+                    ];
+                    break;
+                }
+            }
+        }
+        wp_reset_postdata();
+
+        return $user_events;
     }
 
     /**
@@ -491,52 +536,8 @@ class Theme extends WknTheme
      */
     public static function renderMyEventsPage(): void
     {
-        $current_user_id = get_current_user_id();
-        $user_email = wp_get_current_user()->user_email;
-        
-        // Récupérer tous les attendees pour cet utilisateur
-        $user_events = [];
-        
-        if (function_exists('tribe_tickets_get_attendees')) {
-            // Récupérer tous les événements avec tickets
-            $events_query = new \WP_Query([
-                'post_type' => 'tribe_events',
-                'posts_per_page' => -1,
-                'post_status' => 'publish',
-            ]);
-            
-            if ($events_query->have_posts()) {
-                while ($events_query->have_posts()) {
-                    $events_query->the_post();
-                    $event_id = get_the_ID();
-                    
-                    // Récupérer les attendees pour cet événement
-                    $attendees = tribe_tickets_get_attendees($event_id);
-                    
-                    if (!empty($attendees)) {
-                        foreach ($attendees as $attendee) {
-                            // Vérifier si cet attendee correspond à l'utilisateur courant
-                            $attendee_user_id = isset($attendee['user_id']) ? (int) $attendee['user_id'] : 0;
-                            $attendee_email = isset($attendee['purchaser_email']) ? $attendee['purchaser_email'] : '';
-                            
-                            if ($attendee_user_id === $current_user_id || $attendee_email === $user_email) {
-                                $user_events[] = [
-                                    'event_id' => $event_id,
-                                    'event_title' => get_the_title($event_id),
-                                    'event_url' => get_permalink($event_id),
-                                    'ticket_name' => isset($attendee['product_name']) ? $attendee['product_name'] : '',
-                                    'order_status' => isset($attendee['order_status']) ? $attendee['order_status'] : '',
-                                    'attendee_id' => isset($attendee['attendee_id']) ? $attendee['attendee_id'] : '',
-                                ];
-                                break; // Un seul enregistrement par événement
-                            }
-                        }
-                    }
-                }
-                wp_reset_postdata();
-            }
-        }
-        
+        $user_events = self::get_current_user_events_data();
+
         ?>
         <div class="wrap">
             <h1><?php echo esc_html__('Mes évènements', 'app'); ?></h1>

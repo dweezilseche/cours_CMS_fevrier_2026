@@ -90,6 +90,7 @@ export default class Taxi {
 
     this.setupEventListeners();
     this.markWooCommerceLinksAsIgnore();
+    this.markEventLinksAsIgnore();
     this.onDOMContentLoaded();
   }
 
@@ -103,6 +104,20 @@ export default class Taxi {
     root.querySelectorAll('a[href]').forEach(a => {
       const href = (a.getAttribute('href') || '').toLowerCase();
       if (wooPaths.some(path => href.includes(path))) {
+        a.setAttribute('data-taxi-ignore', '');
+      }
+    });
+  }
+
+  /**
+   * Ajoute data-taxi-ignore aux liens vers les pages single event (The Events Calendar).
+   * Charge la page en full pour que Tribe Event Tickets initialise le formulaire RSVP.
+   */
+  markEventLinksAsIgnore(container = document) {
+    const root = container && container.body ? container.body : container || document.body;
+    root.querySelectorAll('a[href]').forEach(a => {
+      const href = (a.getAttribute('href') || '').toLowerCase();
+      if (/\/event\//.test(href) || href.includes('tribe_events')) {
         a.setAttribute('data-taxi-ignore', '');
       }
     });
@@ -168,8 +183,9 @@ export default class Taxi {
     const page = to.renderer.content;
     this.initializeClasses(page);
 
-    // 4. Liens WooCommerce (panier/checkout/compte) en full page
+    // 4. Liens WooCommerce et single event en full page (RSVP / billets)
     this.markWooCommerceLinksAsIgnore(page);
+    this.markEventLinksAsIgnore(page);
 
     // 5. Refresh
     ScrollTrigger.refresh();

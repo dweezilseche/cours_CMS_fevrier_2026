@@ -26,13 +26,12 @@
       </nav>
     {% endif %}
 
-    {# Bouton de connexion #}
+    {# Bouton de connexion (lien, pas bouton) pour que le clic ouvre wp-login.php #}
     <div class="header__login">
       {% include 'components/button.twig' with {
         button: {
           title: 'Se connecter',
           url: site.url ~ '/wp-login.php',
-          type: 'button',
         },
         icon: 'arrow-right',
         class: 'is-normal is-white',

@@ -1,0 +1,54 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+<div class="my-events">
+  <div class="my-events__container container">
+    <header class="my-events__header">
+      <h1 class="my-events__title">Mes événements</h1>
+    </header>
+
+    {% if my_events_logged_out %}
+      <div class="my-events__login-required">
+        <p>Connectez-vous pour voir les événements auxquels vous êtes inscrit.</p>
+        <a href="{{ site.url }}/wp-login.php?redirect_to={{ fn('urlencode', post.link) }}" class="button is-normal is-white" data-taxi-ignore>
+          Se connecter
+        </a>
+      </div>
+    {% elseif not events or events|length == 0 %}
+      <div class="my-events__empty">
+        <p>Vous n’êtes inscrit à aucun événement pour le moment.</p>
+      </div>
+    {% else %}
+      {% if message == 'unregistered' %}
+        <div class="my-events__notice my-events__notice--success" role="status">
+          Vous avez été désinscrit de l’événement avec succès.
+        </div>
+      {% elseif message == 'error' %}
+        <div class="my-events__notice my-events__notice--error" role="alert">
+          Une erreur s’est produite lors de la désinscription.
+        </div>
+      {% endif %}
+
+      <section class="events-list my-events__list">
+        <div class="events-list__container">
+          <div class="events-list__list my-events__cards">
+            {% for event in events %}
+              <div class="my-events__card-wrapper">
+                {% include 'components/event-card.twig' with { event: event } only %}
+                {% if unregister_urls[event.id] is defined %}
+                  <p class="my-events__unregister">
+                    <a href="{{ unregister_urls[event.id] }}" class="my-events__unregister-link" data-taxi-ignore
+                       onclick="return confirm('Êtes-vous sûr de vouloir vous désinscrire de cet événement ?');">
+                      Se désinscrire
+                    </a>
+                  </p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

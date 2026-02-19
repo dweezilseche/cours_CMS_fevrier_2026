@@ -58,9 +58,10 @@ export default class Introduction {
       onComplete: () => {},
     });
 
-    // Body visible
+    // Body visible et cliquable dès le début de l’intro (évite clics ignorés par pointer-events: none)
     this.timeline.to(document.body, {
       opacity: 1,
+      pointerEvents: 'auto',
       clearProps: 'all',
     });
 

@@ -1,7 +1,9 @@
 {% if htmlTag is not defined %}
   {% set htmlTag = 'span' %}
   
-  {% if button.url %}
+  {% if button.type is defined and button.type in ['submit', 'button', 'reset'] %}
+    {% set htmlTag = 'button' %}
+  {% elseif button.url %}
     {% set htmlTag = 'a' %}
   {% elseif button.fake %}
     {% set htmlTag = 'div' %}
@@ -11,7 +13,7 @@
 <{{ htmlTag }}
   class="button{% if class %} {{ class }}{% endif %}{% if noText %} button--no-text{% endif %}"
   {% if id %}id="{{ id }}"{% endif %}
-  {% if button.url %}href="{{ button.url }}"{% endif %}
+  {% if htmlTag == 'a' and button.url %}href="{{ button.url }}"{% endif %}
   {% if button.type %} type="{{ button.type }}"{% endif %}
   {% if button.name is defined and button.name %} name="{{ button.name }}"{% endif %}
   {% if button.value is defined and button.value %} value="{{ button.value }}"{% endif %}

@@ -27,6 +27,7 @@
 @use './shared/contents';
 @use './shared/sections';
 @use './shared/blur';
+@use './shared/forms';
 
 // ------------------------------------ // ------------------------------------------
 // --------------------------------- B A S E ----------------------------------------
@@ -45,6 +46,7 @@
 @use './components/video-player';
 @use './components/subscribers-leaderboard';
 @use './components/card';
+@use './components/event-card';
 
 // ------------------------------------ // ------------------------------------------
 // ----------------------------- P A R T I A L S ------------------------------------
@@ -52,9 +54,9 @@
 
 @use './partials/hero.scss';
 @use './partials/big-img.scss';
+@use './partials/events-list.scss';
 @use './partials/single-content.scss';
-// @use './partials/single-details.scss';
-// @use './partials/single-booking.scss';
+@use './partials/single-details.scss';
 @use './partials/single-sidebar.scss';
 @use './partials/single-hero.scss';
 
@@ -74,3 +76,4 @@
 
 @use './pages/front-page';
 @use './pages/single-event';
+@use './pages/my-events';

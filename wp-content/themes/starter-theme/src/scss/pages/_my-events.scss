@@ -1,0 +1,82 @@
+@use '../utils/variables' as *;
+@use '../utils/responsive' as *;
+@use '../shared/titles' as *;
+
+.my-events {
+  padding: 4rem 0 6rem;
+}
+
+.my-events__container {
+  max-width: var(--container, 1200px);
+  margin: 0 auto;
+}
+
+.my-events__header {
+  margin-bottom: 2.4rem;
+}
+
+.my-events__title {
+  @extend %head-title;
+  color: $white;
+}
+
+.my-events__login-required,
+.my-events__empty {
+  padding: 2rem 0;
+  color: $white;
+
+  p {
+    margin-bottom: 1.2rem;
+  }
+}
+
+.my-events__notice {
+  padding: 1rem 1.2rem;
+  margin-bottom: 2rem;
+  border-radius: 4px;
+
+  &--success {
+    background: rgba(0, 180, 100, 0.2);
+    color: #7dffb3;
+  }
+
+  &--error {
+    background: rgba(200, 60, 60, 0.2);
+    color: #ff9b9b;
+  }
+}
+
+.my-events__list {
+  margin-top: 2rem;
+}
+
+.my-events__cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.my-events__card-wrapper {
+  flex: 1 1 100%;
+  max-width: 100%;
+
+  @include media('>=tablet') {
+    flex: 1 1 calc(50% - 1rem);
+    max-width: calc(50% - 1rem);
+  }
+}
+
+.my-events__unregister {
+  margin-top: 0.8rem;
+  margin-bottom: 0;
+}
+
+.my-events__unregister-link {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: underline;
+
+  &:hover {
+    color: $white;
+  }
+}

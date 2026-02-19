@@ -9,6 +9,8 @@
             {% include 'partials/hero.twig' with { fields: post.hero } %}
 
             {% include 'partials/big-img.twig' with { fields: post.transition } %}
+
+            {% include 'partials/events-list.twig' with { events: post.upcoming_events } %}
         </div>
     </div>
     

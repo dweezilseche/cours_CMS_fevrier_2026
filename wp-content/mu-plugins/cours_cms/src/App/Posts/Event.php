@@ -55,6 +55,17 @@ class Event extends Post
     /**
      * ---------- Dates / Times ----------
      */
+    /**
+     * Compatible avec Timber\Post::date(). Affiche la date de début de l’événement.
+     *
+     * @param string|null $date_format Format PHP (d F Y par défaut).
+     */
+    public function date($date_format = null): string
+    {
+        $format = $date_format !== null ? $date_format : 'd F Y';
+        return $this->getStartDate($format, false);
+    }
+
     public function getStartDate(string $format = 'd F Y', bool $withTime = false): string
     {
         return $this->callString('tribe_get_start_date', [$this->ID, false, $format, $withTime]);

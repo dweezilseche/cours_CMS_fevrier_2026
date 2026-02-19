@@ -1,0 +1,108 @@
+@use '../utils/variables' as *;
+@use '../utils/responsive' as *;
+@use '../shared/contents' as *;
+@use '../shared/misc' as *;
+
+%select,
+%input-text,
+%input-number {
+    border: 0.1rem solid rgba($white, 0.3) !important;
+    padding: 0.8rem;
+    border-radius: 0.4rem;
+    @extend %text-card;
+    color: $white;
+    background: transparent;
+    transition: border 850ms $ease-out-quart;
+    padding: 1.3rem 1.6rem!important;
+
+    &:hover {
+        border: 0.1rem solid $white;
+    }
+
+    &:focus {
+        border: 0.1rem solid $white;
+        outline: none;
+        background: transparent;
+    }
+
+    &:active {
+        border: 0.1rem solid $white;
+    }
+}
+
+
+%select {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+// Select2 (ex. Pays/région WooCommerce) : le <select> est masqué, c’est le conteneur qu’il faut styliser
+.select2-container {
+    width: 100% !important;
+
+    .select2-selection--single {
+        @extend %select;
+        height: auto;
+        min-height: 3.6rem;
+        padding: 0.8rem;
+        display: flex;
+        align-items: center;
+        border-radius: 0.4rem;
+
+        .select2-selection__rendered {
+            padding-left: 0;
+            padding-right: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .select2-selection__arrow {
+            height: 100%;
+            right: 0.8rem;
+            top: 0;
+
+            b {
+                border-color: $black transparent transparent transparent;
+                border-width: 0.5rem 0.4rem 0 0.4rem;
+                margin-left: -0.4rem;
+                margin-top: -0.25rem;
+            }
+        }
+    }
+
+    &.select2-container--focus .select2-selection--single,
+    &.select2-container--open .select2-selection--single {
+        border-width: 0.2rem;
+        outline: none;
+        background: $white;
+    }
+}
+
+%label {
+    @extend %text-small;
+    margin-bottom: 0.5rem;
+    display: flex;
+}
+
+%text-area {
+    @extend %input-text;
+    height: 10rem;
+    width: 100%;
+    resize: vertical;
+    padding: 0.8rem;
+    border-radius: 0.4rem;
+    @extend %text-card;
+    color: $white;
+    background: transparent;
+    transition: border 850ms $ease-out-quart;
+
+    &:focus {
+        border: 0.1rem solid $light-grey;
+        outline: none;
+        background: transparent;
+    }
+
+    &:active {
+        border: 0.1rem solid $light-grey;
+    }
+}
