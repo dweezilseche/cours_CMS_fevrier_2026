@@ -1,66 +1,150 @@
-# WordPress core
+# ==============================================================================
+# WORDPRESS GIT STRATEGY
+# ==============================================================================
+# Ce .gitignore permet de versionner UNIQUEMENT le dossier wp-content
+# (thèmes, mu-plugins personnalisés) en excluant tout le core WordPress
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# WordPress Core (TOUT IGNORER)
+# ------------------------------------------------------------------------------
+# On ignore tous les fichiers WordPress de base
 /wp-admin/
 /wp-includes/
 /wp-*.php
 /xmlrpc.php
 /readme.html
 /license.txt
+/index.php
 
-# Configuration
+# ------------------------------------------------------------------------------
+# Configuration sensible
+# ------------------------------------------------------------------------------
 wp-config.php
 .htaccess
+.env
+.env.*
+!.env.example
 
-# Logs and databases
-*.log
+# ------------------------------------------------------------------------------
+# WordPress - Fichiers temporaires et uploads
+# ------------------------------------------------------------------------------
+# Uploads (médias utilisateurs)
+wp-content/uploads/
+
+# Cache et fichiers temporaires WordPress
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/backups/
+wp-content/cache/
+wp-content/w3tc*/
+wp-content/advanced-cache.php
+wp-content/object-cache.php
+
+# ------------------------------------------------------------------------------
+# WordPress Plugins
+# ------------------------------------------------------------------------------
+# On ignore TOUS les plugins tiers (installés via admin WP)
+# On garde uniquement les mu-plugins (must-use) car ce sont nos plugins custom
+wp-content/plugins/
+!wp-content/plugins/.gitkeep
+
+# ------------------------------------------------------------------------------
+# WordPress Languages
+# ------------------------------------------------------------------------------
+# Fichiers de traduction générés automatiquement
+wp-content/languages/*
+!wp-content/languages/.gitkeep
+
+# ------------------------------------------------------------------------------
+# Node.js & NPM
+# ------------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build files (généré par Vite/Webpack)
+dist/
+build/
+
+# ------------------------------------------------------------------------------
+# Composer (PHP)
+# ------------------------------------------------------------------------------
+# On garde vendor/ en dev mais on peut l'ignorer en prod
+# Décommentez la ligne suivante si vous ne voulez pas versionner vendor/
+# vendor/
+
+# ------------------------------------------------------------------------------
+# Base de données
+# ------------------------------------------------------------------------------
 *.sql
+*.sql.gz
 *.sqlite
+*.db
 
-# OS files
+# Logs
+*.log
+wp-content/debug.log
+
+# ------------------------------------------------------------------------------
+# Système d'exploitation
+# ------------------------------------------------------------------------------
+# macOS
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
-Thumbs.db
-*~
 
-# IDE
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# ------------------------------------------------------------------------------
+# IDE & Éditeurs
+# ------------------------------------------------------------------------------
+# VS Code
 .vscode/
+*.code-workspace
+
+# PhpStorm / IntelliJ
 .idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
 *.swp
 *.swo
+*.swn
 
-# Node
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Emacs
+\#*\#
+.\#*
 
-# Build files
-dist/
-build/
+# ------------------------------------------------------------------------------
+# Divers
+# ------------------------------------------------------------------------------
+# Fichiers temporaires
+*.tmp
+*.temp
+*.bak
+*.backup
 
-# Environment
-.env
-.env.local
-.env.*.local
-
-# WordPress uploads
-wp-content/uploads/
-wp-content/upgrade/
-wp-content/backup-db/
-wp-content/cache/
-wp-content/backups/
-
-# WordPress plugins (sauf mu-plugins et themes)
-wp-content/plugins/
-!wp-content/plugins/.gitkeep
-
-# Languages (générés automatiquement)
-wp-content/languages/
-
-# Composer vendor (si non utilisé pour le déploiement)
-# Décommentez si vous voulez ignorer vendor/
-wp-content/themes/*/vendor/
-wp-content/mu-plugins/vendor/
+# Archives
+*.zip
+*.tar
+*.gz
+*.rar
