@@ -77,6 +77,9 @@ class Theme extends WknTheme
         add_action('login_enqueue_scripts', [self::class, 'wpm_login_style']);
         add_action('admin_head', [self::class, 'admin_custom_styles']);
         add_action('admin_head', [self::class, 'hideProfileSectionsForSubscribers']);
+
+        // Delete admin bar
+        add_filter('show_admin_bar', '__return_false');
         
         add_filter('timber/context', [self::class, 'addToContext']);
 
