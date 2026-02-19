@@ -442,23 +442,30 @@ class Theme extends WknTheme
         }
         
         if ($is_user_attendee) {
-            // Supprimer l'attendee
-            $deleted = wp_delete_post($attendee_id, true);
+            $deleted = false;
 
-            $redirect_to = isset($_GET['redirect_to']) ? esc_url_raw(wp_unslash($_GET['redirect_to'])) : '';
-            $same_site   = $redirect_to && (strpos($redirect_to, home_url()) === 0);
-            $redirect_url = ($redirect_to && $same_site)
-                ? add_query_arg(['message' => 'unregistered', 'nocache' => time()], $redirect_to)
-                : add_query_arg(['page' => 'my-events', 'message' => 'unregistered', 'nocache' => time()], admin_url('admin.php'));
-
+            // Utiliser l’API Event Tickets (RSVP) pour supprimer l’attendee (gère droits + métadonnées).
+            if ($found_event_id && function_exists('tribe')) {
+                $rsvp = tribe('tickets.rsvp');
+                if ($rsvp && method_exists($rsvp, 'delete_ticket')) {
+                    $deleted = $rsvp->delete_ticket($found_event_id, $attendee_id);
+                }
+            }
+            if ( ! $deleted) {
+                $deleted = wp_delete_post($attendee_id, true);
+            }
             if ($deleted && $found_event_id) {
                 wp_cache_delete($found_event_id, 'tribe_attendees');
                 wp_cache_delete('attendees_' . $found_event_id, 'tribe_events');
                 delete_transient('tribe_attendees_' . $found_event_id);
-                do_action('event_tickets_after_delete_ticket', $attendee_id, $found_event_id);
-                wp_redirect($redirect_url);
-                exit;
             }
+
+            $redirect_to  = isset($_GET['redirect_to']) ? esc_url_raw(wp_unslash($_GET['redirect_to'])) : '';
+            $same_site    = $redirect_to && (strpos($redirect_to, home_url()) === 0);
+            $redirect_url = ($redirect_to && $same_site)
+                ? add_query_arg(['message' => 'unregistered', 'nocache' => time()], $redirect_to)
+                : add_query_arg(['page' => 'my-events', 'message' => 'unregistered', 'nocache' => time()], admin_url('admin.php'));
+
             if ($deleted) {
                 wp_redirect($redirect_url);
                 exit;

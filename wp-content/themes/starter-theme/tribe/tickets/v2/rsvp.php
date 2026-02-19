@@ -34,7 +34,7 @@ if ( empty( $active_rsvps ) ) {
 
 <div
 	id="<?php echo esc_attr( $block_html_id ); ?>"
-	class="tribe-common event-tickets tesst"
+	class="tribe-common event-tickets"
 >
 	<?php foreach ( $active_rsvps as $rsvp ) : ?>
 		<div

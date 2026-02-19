@@ -93,6 +93,10 @@ body {
   }
 }
 
+[data-taxi-view] {
+  min-height: 100vh;
+}
+
 [data-parallax] {
   >* {
     transform: scale(1.15);

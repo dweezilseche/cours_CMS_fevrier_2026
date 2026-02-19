@@ -2,6 +2,8 @@
 @use '../shared/blur' as *;
 @use '../shared/contents' as *;
 @use '../shared/forms' as *;
+@use '../shared/buttons' as *;
+@use '../shared/links' as *;
 
 
 .single-event__container {
@@ -184,6 +186,19 @@
     .tec-tickets__attendees-list-item-attendee-details{
         color: $white;
         font: 500 1.5rem / 1.4 $FranklinGothic;
+    }
+
+    .tribe-link-view-attendee{
+        @extend %card-blur;
+        padding: 1.6rem;
+        border-radius: var(--border-radius);
+        transform: translateY(1.2rem);
+
+        a{
+            display: block;
+            @extend %link;
+            margin-top: 0.4rem;
+        }
     }
   }
   

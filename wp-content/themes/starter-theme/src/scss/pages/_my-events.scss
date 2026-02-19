@@ -3,11 +3,10 @@
 @use '../shared/titles' as *;
 
 .my-events {
-  padding: 4rem 0 6rem;
+  padding: 10rem var(--gutter) 10rem;
 }
 
 .my-events__container {
-  max-width: var(--container, 1200px);
   margin: 0 auto;
 }
 

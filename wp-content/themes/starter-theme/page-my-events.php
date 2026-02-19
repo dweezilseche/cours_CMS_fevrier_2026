@@ -14,6 +14,11 @@ if ( ! defined('ABSPATH')) {
 
 $context = Timber::context();
 
+// Éviter le cache navigateur/serveur : après une désinscription, la liste doit être à jour.
+if (is_user_logged_in()) {
+    nocache_headers();
+}
+
 if ( ! is_user_logged_in()) {
     $context['my_events_logged_out'] = true;
     $context['events']               = [];
