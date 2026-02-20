@@ -44,7 +44,8 @@ class MyEvents extends Page
             'meta_key'       => '_EventStartDate',
         ];
 
-        return \Timber\Timber::get_posts($events_query);
+        $posts = \Timber\Timber::get_posts($events_query);
+        return is_array($posts) ? $posts : $posts->to_array();
     }
 
     /**
