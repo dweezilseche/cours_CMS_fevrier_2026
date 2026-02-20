@@ -7,10 +7,10 @@
         <svg class="events-list__icon">
             <use href="#polygon"></use>
         </svg>
-      <h1 class="events-list__title">Mes évènements</h2>
+      <h1 class="events-list__title">Mes évènements</h1>
     </div>
 
-    {% if my_events_logged_out %}
+    {% if not post.isUserLoggedIn %}
       <div class="my-events__login-required">
         <p>Connectez-vous pour voir les événements auxquels vous êtes inscrit.</p>
 
@@ -24,27 +24,26 @@
           ignore: true,
         } only %}
       </div>
-    {% elseif not events or events|length == 0 %}
+    {% elseif not post.hasEvents %}
       <div class="my-events__empty">
-        <p>Vous n’êtes inscrit à aucun événement pour le moment.</p>
+        <p>Vous n'êtes inscrit à aucun événement pour le moment.</p>
       </div>
     {% else %}
-      {% if message == 'unregistered' %}
-        <div class="my-events__notice my-events__notice--success" role="status">
-          Vous avez été désinscrit de l’événement avec succès.
-        </div>
-      {% elseif message == 'error' %}
-        <div class="my-events__notice my-events__notice--error" role="alert">
-          Une erreur s’est produite lors de la désinscription.
+      {% if post.hasMessage %}
+        <div class="my-events__notice my-events__notice--{{ post.getMessageType }}" role="{% if post.getMessageType == 'error' %}alert{% else %}status{% endif %}">
+          {{ post.getMessageText }}
         </div>
       {% endif %}
 
       <section class="events-list my-events__list">
         <div class="events-list__container">
           <div class="events-list__list my-events__cards">
-            {% for event in events %}
+            {% for event in post.getUserEvents %}
               <div class="my-events__card-wrapper">
-                {% include 'components/event-card.twig' with { event: event, unregister_urls: unregister_urls } only %}
+                {% include 'components/event-card.twig' with { 
+                  event: event, 
+                  unregister_urls: post.getUnregisterUrls 
+                } only %}
               </div>
             {% endfor %}
           </div>

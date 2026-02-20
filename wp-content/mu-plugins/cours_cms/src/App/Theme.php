@@ -100,7 +100,38 @@ class Theme extends WknTheme
         add_filter('tribe_events_after_html', '__return_false');
         add_filter('tribe_template_pre_html', [self::class, 'disableTecTemplateWrapper'], 10, 4);
 
+        // Nettoyer le cache des utilisateurs après modification des champs ACF
+        add_action('acf/save_post', [self::class, 'clearUserMetaCacheOnAcfSave'], 20);
         
+    }
+
+    /**
+     * Nettoie le cache des métadonnées utilisateur après sauvegarde ACF.
+     * Cela force le rafraîchissement du classement des subscribers.
+     */
+    public static function clearUserMetaCacheOnAcfSave($post_id): void
+    {
+        // Vérifier si c'est un utilisateur (post_id commence par "user_")
+        if (is_string($post_id) && strpos($post_id, 'user_') === 0) {
+            $user_id = (int) str_replace('user_', '', $post_id);
+            
+            if ($user_id > 0) {
+                // Nettoyer le cache des métadonnées de cet utilisateur
+                wp_cache_delete($user_id, 'user_meta');
+                wp_cache_delete($user_id, 'users');
+                
+                // Nettoyer spécifiquement le cache ACF pour cet utilisateur
+                if (function_exists('acf_get_store')) {
+                    $store = acf_get_store('values');
+                    if ($store) {
+                        $store->remove('user_' . $user_id);
+                    }
+                }
+                
+                // Optionnel : nettoyer tout le cache object si persistant
+                clean_user_cache($user_id);
+            }
+        }
     }
 
     /**

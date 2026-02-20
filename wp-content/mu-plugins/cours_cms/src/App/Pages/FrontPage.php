@@ -25,7 +25,10 @@ class FrontPage extends Page
         
         if (!empty($users)) {
             foreach ($users as $user) {
-                // Récupérer les champs ACF
+                // Nettoyer le cache de cet utilisateur pour s'assurer d'avoir les données fraîches
+                wp_cache_delete($user->ID, 'user_meta');
+                
+                // Récupérer les champs ACF (avec cache désactivé implicitement)
                 $infos = get_field('infos', 'user_' . $user->ID);
                 
                 $subscriber_data = [

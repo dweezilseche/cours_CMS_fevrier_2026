@@ -14,6 +14,7 @@ class ClassMapper extends WknClassMapper
             'page' => fn (\WP_Post $post) => match (get_page_template_slug($post->ID)) {
                 'front-page.php'                       => \App\Pages\FrontPage::class,
                 'page-events.php'                      => \App\Pages\Events::class,
+                'page-my-events.php'                   => \App\Pages\MyEvents::class,
                 'home.php'                             => \App\Pages\News::class,
                 default                                => \App\Pages\Page::class,
             },
