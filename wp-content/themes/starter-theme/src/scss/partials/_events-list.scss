@@ -15,6 +15,10 @@
     .events & {
         padding: 15rem var(--gutter);
     }
+
+    .my-events & {
+        padding: 0;
+    }
 }
 
 .events-list__container {
@@ -24,7 +28,8 @@
     gap: 6.4rem;
     margin-top: 3.2rem;
 
-    .events & {
+    .events &,
+    .my-events & {
         margin-top: 0;
     }
 
@@ -38,7 +43,10 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 5.4rem;
+
+    .news & {
+        margin-bottom: 5.4rem;
+    }
 }
 
 .events-list__title {
