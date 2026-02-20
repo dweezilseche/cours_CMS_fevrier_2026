@@ -148,3 +148,6 @@ $RECYCLE.BIN/
 *.tar
 *.gz
 *.rar
+
+
+*.md
