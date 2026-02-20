@@ -1,7 +1,7 @@
 {% extends "layouts/base.twig" %}
 
 {% block content %}
-<div class="single-event">
+<div class="single-event" data-parallax-container>
   <div class="single-event__container">
     {% include 'partials/hero-single.twig' with { image: post.thumbnail, title: post.title } %}
     

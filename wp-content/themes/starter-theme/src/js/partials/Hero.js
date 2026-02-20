@@ -54,4 +54,11 @@ export default class Hero {
       clearProps: 'opacity,yPercent',
     });
   }
+
+  destroy() {
+    if (!this.DOM.el) return;
+
+    this.timeline.kill();
+    this.splitSubtitle.revert();
+  }
 }

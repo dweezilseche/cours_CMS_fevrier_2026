@@ -6,7 +6,7 @@
   'juillet':'07','août':'08','septembre':'09','octobre':'10','novembre':'11','décembre':'12'
 } %}
 
-<div class="hero" id="hero">
+<div class="hero" id="hero" data-parallax-container>
   <div class="hero__container">
     <h1 class="hero__title">{{ title }}</h1>
 
@@ -15,7 +15,7 @@
     </svg>
 
     <div class="hero__content">
-      <div class="hero__events">
+      <div class="hero__events" data-parallax-item data-speed="0.35">
         <h2 class="hero__events-title">Prochains évènements</h2>
         {% if post.upcoming_events|length > 0 %}
           <ul class="hero__events-list" data-list-animation>
@@ -36,7 +36,7 @@
         {% endif %}
       </div>
 
-      <div class="hero__news">
+      <div class="hero__news" data-parallax-item data-speed="0.55">
         <h2 class="hero__news-title">Dernières actualités</h2>
         {% if post.latest_posts|length > 0 %}
           <ul class="hero__news-list" data-list-animation>

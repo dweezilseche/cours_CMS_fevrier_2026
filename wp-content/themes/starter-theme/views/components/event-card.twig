@@ -1,11 +1,11 @@
-<article class="event-card" href="{{ event.link }}">
+<article class="event-card" href="{{ event.link }}" data-card-animation>
     <a class="event-card__link" href="{{ event.link }}">
         <div class="event-card__img-wrapper">
             {% if event.thumbnail %}
                 {% include 'components/picture.twig' with { 
                     picture: event.thumbnail, 
                     class: 'event-card__img',
-                } %}
+                } only %}
             {% endif %}
         </div>
 
@@ -17,25 +17,26 @@
             
             <p class="event-card__excerpt">{{ event.excerpt|truncate(30, '...') }}</p>
         </div>
+
+        {% include 'components/button.twig' with {
+            link: event.link,
+            class: 'event-card__button is-normal is-white',
+            title: event.titlebutton|default('En savoir plus'),
+            icon: 'arrow-right',
+            htmlTag: 'span',
+        } only %}
+
+        {% set event_id = event.ID ?? event.id %}
+        {% if unregister_urls[event_id] is defined %}
+            {% include 'components/link.twig' with {
+            link: {
+                url: unregister_urls[event_id],
+                title: 'Se désinscrire',
+            },
+            class: 'my-events__unregister-link',
+            router_disabled: true
+            } only %}
+        {% endif %}
     </a>
 
-    {% include 'components/button.twig' with {
-        link: event.link,
-        class: 'event-card__button is-normal is-white',
-        title: event.titlebutton|default('En savoir plus'),
-        icon: 'arrow-right',
-        htmlTag: 'a',
-    } only %}
-
-    {% set event_id = event.ID ?? event.id %}
-    {% if unregister_urls[event_id] is defined %}
-        {% include 'components/link.twig' with {
-        link: {
-            url: unregister_urls[event_id],
-            title: 'Se désinscrire',
-        },
-        class: 'my-events__unregister-link',
-        router_disabled: true
-        } only %}
-    {% endif %}
 </article>

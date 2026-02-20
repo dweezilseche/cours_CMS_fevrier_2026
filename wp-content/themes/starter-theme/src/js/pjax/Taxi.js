@@ -11,6 +11,10 @@ import MediasAsyncLoad from '../classes/MediasAsyncLoad';
 import InView from '../classes/InView';
 import Medias from '../classes/Medias';
 
+// Classes
+import ListAnimation from '../classes/ListAnimation';
+import Parallax from '../classes/Parallax';
+
 // Animations
 import Introduction from '../animations/Introduction';
 
@@ -84,6 +88,16 @@ export default class Taxi {
       // Partials
       hero: {
         class: Hero,
+        params: container => [container, { lenis }],
+      },
+
+      // Classes
+      listAnimation: {
+        class: ListAnimation,
+        params: container => [container, { lenis }],
+      },
+      parallax: {
+        class: Parallax,
         params: container => [container, { lenis }],
       },
     };

@@ -6,7 +6,7 @@
         </svg>
       <h2 class="events-list__title">Prochains évènements</h2>
     </div>
-    <div class="events-list__list">
+    <div class="events-list__list" data-list-animation>
       {% for event in events %}
         {% include 'components/event-card.twig' with { event: event } only %}
       {% endfor %}
