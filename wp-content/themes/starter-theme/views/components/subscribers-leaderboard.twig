@@ -5,6 +5,9 @@
 
 {% set subscribers_list = subscribers|default([]) %}
 {% set limit = limit|default(0) %}
+{% set current_user = post.current_user|default(null) %}
+{% set current_user_rank = current_user_rank|default(null) %}
+
 
 {% if subscribers_list|length > 0 %}
     <div class="subscribers-leaderboard" data-parallax-item data-speed="0.75">
@@ -17,26 +20,26 @@
         </div>
         
         <div class="leaderboard__list">
+            {# Top N (ex. 8) : chaque ligne à sa place, l’utilisateur connecté est surligné s’il est dedans #}
             {% for subscriber in subscribers_list %}
                 {% if limit == 0 or loop.index <= limit %}
-                    <div class="leaderboard__item">
+                    {% set is_current = current_user and subscriber.id == current_user.id %}
+                    <div class="leaderboard__item {{ is_current ? 'leaderboard__item--current' : '' }}">
                         <div class="leaderboard__rank">
                             <span class="rank-number">
                                 {% if loop.index == 1 %}
                                     {{ loop.index }}<sup>er</sup>
-                                {% elseif loop.index == 2 %}
-                                    {{ loop.index }}<sup>e</sup>
-                                {% elseif loop.index == 3 %}
+                                {% elseif loop.index == 2 or loop.index == 3 %}
                                     {{ loop.index }}<sup>e</sup>
                                 {% else %}
-                                    #{{ loop.index }}
+                                    {{ loop.index }}<sup>e</sup>
                                 {% endif %}
                             </span>
                         </div>
-                        
-                        <div class="leaderboard__avatar {{ loop.index == 1 ? 'leaderboard__avatar--first' : '' }} {{ loop.index == 2 ? 'leaderboard__avatar--second' : '' }} {{ loop.index == 3 ? 'leaderboard__avatar--third' : '' }}">
+
+                        <div class="leaderboard__avatar {{ loop.index == 1 ? 'leaderboard__avatar--first' : '' }} {{ loop.index == 2 ? 'leaderboard__avatar--second' : '' }} {{ loop.index == 3 ? 'leaderboard__avatar--third' : '' }} {{ is_current ? 'leaderboard__avatar--current' : '' }}">
                             {% if subscriber.avatar %}
-                                <img src="{{ subscriber.avatar.url }}" 
+                                <img src="{{ subscriber.avatar.url }}"
                                      alt="{{ subscriber.display_name }}"
                                      class="leaderboard__avatar-image">
                             {% else %}
@@ -45,17 +48,56 @@
                                 </div>
                             {% endif %}
                         </div>
-                        
+
                         <div class="leaderboard__info">
                             <p class="subscriber-username">@{{ subscriber.username }}</p>
                         </div>
-                        
+
                         <div class="leaderboard__points">
                             <span class="leaderboard__points--value">{{ subscriber.points }}</span>
                         </div>
                     </div>
                 {% endif %}
             {% endfor %}
+
+            {# Utilisateur connecté hors top N : affiché après le top N, à sa place (ex. 15e) #}
+            {% if current_user and current_user_rank and (limit > 0 and current_user_rank > limit) %}
+                <div class="leaderboard__item leaderboard__item--current">
+                    <div class="leaderboard__rank">
+                        <span class="rank-number">
+                            {% if current_user_rank == 1 %}
+                                {{ current_user_rank }}<sup>er</sup>
+                            {% else %}
+                                {{ current_user_rank }}<sup>e</sup>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="leaderboard__avatar leaderboard__avatar--current">
+                        {% if current_user.avatar_acf %}
+                            <img src="{{ current_user.avatar_acf.url }}"
+                                alt="{{ current_user.display_name }}"
+                                class="leaderboard__avatar-image">
+                        {% else %}
+                            <div class="avatar-placeholder">
+                                {{ current_user.display_name|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="leaderboard__info">
+                        <p class="subscriber-username">
+                            @{{ current_user.username }}
+                        </p>
+                    </div>
+
+                    <div class="leaderboard__points">
+                        <span class="leaderboard__points--value">
+                            {{ current_user.points }}
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% else %}

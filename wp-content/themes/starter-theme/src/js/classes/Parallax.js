@@ -13,7 +13,7 @@ export default class Parallax {
       // clearProps à la destruction
       clearProps: 'transform',
       // debug
-      markers: true,
+      // markers: true,
       ...options,
     };
 

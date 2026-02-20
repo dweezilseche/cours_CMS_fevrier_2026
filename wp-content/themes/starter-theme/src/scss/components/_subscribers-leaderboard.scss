@@ -50,6 +50,10 @@
   &:hover {
     background: rgba(255, 255, 255, 0.1);
   }
+
+  &--current {
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .leaderboard__avatar {

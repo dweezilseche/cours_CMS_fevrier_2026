@@ -222,86 +222,10 @@ class Theme extends WknTheme
             $context['cart_count'] = 0;
         }
         
-        // Ajouter les subscribers avec leurs infos
-        $context['subscribers'] = self::getSubscribersWithInfos();
-        
-        // Ajouter les derniers articles
-        // $context['latest_posts'] = self::getLatestPosts();
-        
         return $context;
     }
 
-    /**
-     * Récupère tous les subscribers avec leurs infos ACF (avatar + points).
-     * Retourne un tableau d'utilisateurs triés par points décroissants.
-     */
-    public static function getSubscribersWithInfos(): array
-    {
-        $subscribers = [];
-        
-        // Récupérer tous les utilisateurs avec le rôle subscriber ou customer
-        $users = get_users([
-            'role__in' => ['subscriber', 'customer'],
-            'orderby' => 'registered',
-            'order' => 'DESC',
-        ]);
-        
-        if (!empty($users)) {
-            foreach ($users as $user) {
-                // Récupérer les champs ACF
-                $infos = get_field('infos', 'user_' . $user->ID);
-                
-                $subscriber_data = [
-                    'id' => $user->ID,
-                    'username' => $user->user_login,
-                    'display_name' => $user->display_name,
-                    'email' => $user->user_email,
-                    'registered' => $user->user_registered,
-                    'avatar' => null,
-                    'points' => 0,
-                ];
-                
-                // Récupérer les infos du groupe field
-                if ($infos) {
-                    if (isset($infos['avatar']) && !empty($infos['avatar'])) {
-                        $subscriber_data['avatar'] = $infos['avatar'];
-                    }
-                    if (isset($infos['points']) && is_numeric($infos['points'])) {
-                        $subscriber_data['points'] = (int) $infos['points'];
-                    }
-                }
-                
-                $subscribers[] = $subscriber_data;
-            }
-        }
-        
-        // Trier par points décroissants
-        usort($subscribers, function($a, $b) {
-            return $b['points'] - $a['points'];
-        });
-        
-        return $subscribers;
-    }
 
-    /**
-     * Récupère les derniers articles publiés.
-     * 
-     * @param int $count Nombre d'articles à récupérer
-     * @return \Timber\PostCollectionInterface|array
-     */
-    public static function getLatestPosts()
-    {
-        $args = [
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'posts_per_page' => '-1',
-            'orderby' => 'date',
-            'order' => 'DESC',
-        ];
-        
-        $posts = Timber::get_posts($args);
-        return $posts ?: [];
-    }
 
     public static function wpDashboardSetup(): void
     {

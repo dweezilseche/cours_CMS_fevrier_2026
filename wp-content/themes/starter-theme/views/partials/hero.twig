@@ -57,8 +57,9 @@
       </div>
 
       {% include 'components/subscribers-leaderboard.twig' with { 
-          subscribers: subscribers,
-          limit: 8 
+          subscribers: post.subscribers,
+          limit: 6,
+          current_user_rank: post.current_user_rank
       } %}
     </div>
 
